@@ -1,0 +1,191 @@
+{
+  "auth": {
+    "login": {
+      "title": "Bon retour",
+      "subtitle": "Connectez-vous à votre espace",
+      "heroTitle": "Votre génie vous attend.",
+      "heroSubtitle": "Chaque entretien est une porte. Nous vous aidons à la franchir avec confiance.",
+      "forgotPassword": "Mot de passe oublié ?",
+      "features": {
+        "interviews": "Simulations d'entretien via IA",
+        "cv": "Analyse de CV intelligente",
+        "advice": "Conseils personnalisés et en direct"
+      },
+      "emailLabel": "Email",
+      "passwordLabel": "Mot de passe",
+      "emailPlaceholder": "votre@email.com",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Se connecter",
+      "submitting": "Connexion...",
+      "noAccount": "Pas encore de compte ?",
+      "signup": "S'inscrire",
+      "errors": {
+        "required": "Email et mot de passe requis",
+        "invalidCredentials": "Email ou mot de passe incorrect",
+        "unknown": "Une erreur est survenue"
+      }
+    },
+    "signup": {
+      "title": "Créer un compte",
+      "subtitle": "Rejoignez 500+ étudiants qui préparent leurs entretiens",
+      "heroTitle": "Rejoignez la communauté.",
+      "heroSubtitle": "Des milliers d'étudiants préparent leurs entretiens avec Genus.",
+      "features": {
+        "free": "Compte gratuit",
+        "access": "Accès immédiat",
+        "noCard": "Aucune carte bancaire requise"
+      },
+      "emailLabel": "Email",
+      "passwordLabel": "Mot de passe",
+      "passwordConfirmLabel": "Confirmer le mot de passe",
+      "emailPlaceholder": "alice@email.com",
+      "passwordPlaceholder": "8 caractères minimum",
+      "passwordHint": "Au moins 8 caractères",
+      "termsLabel": "J'accepte les CGU et la politique de confidentialité",
+      "submit": "Créer mon compte",
+      "submitting": "Création...",
+      "hasAccount": "Déjà un compte ?",
+      "login": "Se connecter",
+      "successMessage": "Inscription réussie ! Connectez-vous",
+      "errors": {
+        "required": "Tous les champs sont requis",
+        "passwordMismatch": "Les mots de passe ne correspondent pas",
+        "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+        "emailExists": "Cet email est déjà utilisé",
+        "unknown": "Une erreur est survenue"
+      }
+    }
+  },
+  "chat": {
+    "placeholder": "Posez votre question...",
+    "send": "Envoyer",
+    "loading": "Chargement...",
+    "emptyState": "Aucune conversation sélectionnée",
+    "emptyStateTitle": "Prêt pour votre entretien ?",
+    "emptyStateDescription": "Sélectionnez une conversation ou commencez-en une nouvelle.",
+    "noChats": "Pas encore de conversation",
+    "startNew": "Commencer une nouvelle conversation",
+    "inProgress": "Entretien IA · en cours",
+    "me": "Moi",
+    "newChat": "Nouveau chat",
+    "feedback": "Feedback",
+    "score": "/100",
+    "strengths": "Points forts",
+    "improvements": "À améliorer",
+    "selectOrCreate": "Sélectionnez ou créez une conversation…",
+    "shortcutHint": "Shift+Entrée pour envoyer · Entrée pour nouvelle ligne",
+    "errors": {
+      "failedToLoad": "Impossible de charger la conversation",
+      "failedToSend": "Impossible d'envoyer le message",
+      "rateLimited": "Trop de messages. Veuillez réessayer plus tard."
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "accountInfo": "Informations du compte",
+    "email": "Email",
+    "memberSince": "Membre depuis",
+    "changePassword": "Changer le mot de passe",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "passwordMinLength": "min. 8 caractères",
+    "updatePassword": "Mettre à jour",
+    "updatingPassword": "Mise à jour...",
+    "passwordSuccess": "Mot de passe mis à jour avec succès",
+    "confirmPasswordChange": "Confirmer le changement de mot de passe",
+    "confirmPasswordDescription": "Êtes-vous sûr de vouloir changer votre mot de passe ?",
+    "confirm": "Confirmer",
+    "exportData": "Télécharger mes données",
+    "exportDescription": "Téléchargez une copie de vos données personnelles et conversations.",
+    "download": "Télécharger mes données",
+    "deleteAccount": "Supprimer mon compte",
+    "deleteDescription": "Cette action supprimera définitivement votre compte et toutes vos données.",
+    "deleteButton": "Supprimer mon compte",
+    "deleteConfirm": "Êtes-vous sûr ? Cette action est irréversible.",
+    "cancel": "Annuler",
+    "confirmDelete": "Confirmer la suppression",
+    "deleting": "Suppression...",
+    "errors": {
+      "passwordValidation": "Le mot de passe doit contenir au moins 8 caractères",
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "currentPasswordRequired": "Veuillez entrer votre mot de passe actuel",
+      "updateFailed": "Impossible de mettre à jour le mot de passe",
+      "exportFailed": "Impossible d'exporter les données",
+      "deleteFailed": "Impossible de supprimer le compte",
+      "loadProfileFailed": "Impossible de charger le profil",
+      "loadProfile": "Erreur lors du chargement du profil"
+    }
+  },
+  "layout": {
+    "appName": "Genus",
+    "nav": {
+      "home": "Accueil",
+      "chat": "Entretien IA",
+      "history": "Historique",
+      "cv": "Analyse CV",
+      "profile": "Profil"
+    },
+    "themeLight": "Mode clair",
+    "themeDark": "Mode sombre",
+    "logout": "Déconnexion",
+    "loading": "Chargement...",
+    "switchToEnglish": "Passer à l'anglais",
+    "switchToFrench": "Passer au français"
+  },
+  "sidebar": {
+    "newChat": "Nouveau chat",
+    "rename": "Renommer",
+    "delete": "Supprimer",
+    "search": "Rechercher...",
+    "conversations": "Conversations",
+    "loading": "Chargement des conversations...",
+    "error": "Erreur lors du chargement",
+    "retry": "Réessayer",
+    "empty": "Aucune conversation",
+    "noResults": "Aucun résultat",
+    "deleteTitle": "Supprimer",
+    "renameTitle": "Renommer la conversation",
+    "deleteConfirm": "Supprimer '{title}' ? Cette action ne peut pas être annulée.",
+    "deletedChat": "Conversation supprimée",
+    "renameModalTitle": "Titre du chat",
+    "renameTitleEmpty": "Le titre ne peut pas être vide",
+    "renameTitleTooLong": "Le titre doit contenir au maximum 100 caractères",
+    "renameFailed": "Impossible de renommer le chat"
+  },
+  "admin": {
+    "title": "Admin",
+    "loginTitle": "Admin — ganus",
+    "adminSecret": "Clé secrète",
+    "invalidSecret": "Clé secrète invalide ou accès refusé",
+    "connectionError": "Erreur de connexion",
+    "loading": "Chargement...",
+    "access": "Accéder",
+    "dashboard": "Tableau de bord",
+    "refresh": "Rafraîchir",
+    "stats": {
+      "title": "Statistiques",
+      "totalUsers": "Utilisateurs",
+      "totalSessions": "Sessions",
+      "totalMessages": "Appels LLM",
+      "costToday": "Coût aujourd'hui",
+      "costMonth": "Coût ce mois",
+      "costAllTime": "Coût total",
+      "totalCost": "Coût total (USD)"
+    },
+    "topUsers": "Top users (coût)",
+    "noData": "Aucune donnée",
+    "calls": "appels",
+    "recentLogs": "Logs récents",
+    "noLogs": "Aucun log"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur serveur",
+    "ok": "OK",
+    "cancel": "Annuler",
+    "submit": "Soumettre",
+    "toggleTheme": "Activer/désactiver le thème",
+    "menu": "Menu"
+  }
+}

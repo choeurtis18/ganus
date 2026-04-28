@@ -1,0 +1,191 @@
+{
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to your workspace",
+      "heroTitle": "Your genius awaits.",
+      "heroSubtitle": "Every interview is a door. We help you walk through it with confidence.",
+      "forgotPassword": "Forgot password?",
+      "features": {
+        "interviews": "AI-powered interview simulations",
+        "cv": "Intelligent CV analysis",
+        "advice": "Personalized real-time guidance"
+      },
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "emailPlaceholder": "your@email.com",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Sign In",
+      "submitting": "Signing in...",
+      "noAccount": "Don't have an account?",
+      "signup": "Sign Up",
+      "errors": {
+        "required": "Email and password are required",
+        "invalidCredentials": "Invalid email or password",
+        "unknown": "An error occurred"
+      }
+    },
+    "signup": {
+      "title": "Create Account",
+      "subtitle": "Join 500+ students preparing for interviews",
+      "heroTitle": "Join the community.",
+      "heroSubtitle": "Thousands of students prepare their interviews with Genus.",
+      "features": {
+        "free": "Free account",
+        "access": "Instant access",
+        "noCard": "No credit card required"
+      },
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "passwordConfirmLabel": "Confirm Password",
+      "emailPlaceholder": "alice@email.com",
+      "passwordPlaceholder": "8 characters minimum",
+      "passwordHint": "At least 8 characters",
+      "termsLabel": "I agree to the Terms of Service and Privacy Policy",
+      "submit": "Create Account",
+      "submitting": "Creating...",
+      "hasAccount": "Already have an account?",
+      "login": "Sign In",
+      "successMessage": "Signup successful! Please sign in.",
+      "errors": {
+        "required": "All fields are required",
+        "passwordMismatch": "Passwords do not match",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "emailExists": "This email is already in use",
+        "unknown": "An error occurred"
+      }
+    }
+  },
+  "chat": {
+    "placeholder": "Ask your question...",
+    "send": "Send",
+    "loading": "Loading...",
+    "emptyState": "No conversation selected",
+    "emptyStateTitle": "Ready for your interview?",
+    "emptyStateDescription": "Select a conversation or start a new one.",
+    "noChats": "No conversations yet",
+    "startNew": "Start a new conversation",
+    "inProgress": "AI Interview · in progress",
+    "me": "Me",
+    "newChat": "New chat",
+    "feedback": "Feedback",
+    "score": "/100",
+    "strengths": "Strengths",
+    "improvements": "To improve",
+    "selectOrCreate": "Select or create a conversation…",
+    "shortcutHint": "Shift+Enter to send · Enter for new line",
+    "errors": {
+      "failedToLoad": "Failed to load conversation",
+      "failedToSend": "Failed to send message",
+      "rateLimited": "Too many messages. Please try again later."
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "accountInfo": "Account Information",
+    "email": "Email",
+    "memberSince": "Member Since",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "passwordMinLength": "min. 8 characters",
+    "updatePassword": "Update",
+    "updatingPassword": "Updating...",
+    "passwordSuccess": "Password updated successfully",
+    "confirmPasswordChange": "Confirm Password Change",
+    "confirmPasswordDescription": "Are you sure you want to change your password?",
+    "confirm": "Confirm",
+    "exportData": "Download My Data",
+    "exportDescription": "Download a copy of your personal data and conversations.",
+    "download": "Download My Data",
+    "deleteAccount": "Delete Account",
+    "deleteDescription": "This action will permanently delete your account and all your data.",
+    "deleteButton": "Delete Account",
+    "deleteConfirm": "Are you sure? This action cannot be undone.",
+    "cancel": "Cancel",
+    "confirmDelete": "Confirm Deletion",
+    "deleting": "Deleting...",
+    "errors": {
+      "passwordValidation": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match",
+      "currentPasswordRequired": "Please enter your current password",
+      "updateFailed": "Failed to update password",
+      "exportFailed": "Failed to export data",
+      "deleteFailed": "Failed to delete account",
+      "loadProfileFailed": "Failed to load profile",
+      "loadProfile": "Error loading profile"
+    }
+  },
+  "layout": {
+    "appName": "Genus",
+    "nav": {
+      "home": "Home",
+      "chat": "AI Interview",
+      "history": "History",
+      "cv": "CV Analysis",
+      "profile": "Profile"
+    },
+    "themeLight": "Light mode",
+    "themeDark": "Dark mode",
+    "logout": "Sign Out",
+    "loading": "Loading...",
+    "switchToEnglish": "Switch to English",
+    "switchToFrench": "Switch to French"
+  },
+  "sidebar": {
+    "newChat": "New Chat",
+    "rename": "Rename",
+    "delete": "Delete",
+    "search": "Search...",
+    "conversations": "Conversations",
+    "loading": "Loading conversations...",
+    "error": "Error loading conversations",
+    "retry": "Retry",
+    "empty": "No conversations",
+    "noResults": "No results",
+    "deleteTitle": "Delete",
+    "renameTitle": "Rename Conversation",
+    "deleteConfirm": "Delete '{title}'? This action cannot be undone.",
+    "deletedChat": "Conversation deleted",
+    "renameModalTitle": "Chat title",
+    "renameTitleEmpty": "Title cannot be empty",
+    "renameTitleTooLong": "Title must be 100 characters or less",
+    "renameFailed": "Failed to rename chat"
+  },
+  "admin": {
+    "title": "Admin",
+    "loginTitle": "Admin — ganus",
+    "adminSecret": "Admin secret",
+    "invalidSecret": "Invalid secret or access denied",
+    "connectionError": "Connection error",
+    "loading": "Loading...",
+    "access": "Access",
+    "dashboard": "Admin Dashboard",
+    "refresh": "Refresh",
+    "stats": {
+      "title": "Statistics",
+      "totalUsers": "Total Users",
+      "totalSessions": "Sessions",
+      "totalMessages": "LLM Calls",
+      "costToday": "Cost today",
+      "costMonth": "Cost this month",
+      "costAllTime": "Total Cost",
+      "totalCost": "Total Cost (USD)"
+    },
+    "topUsers": "Top users (cost)",
+    "noData": "No data",
+    "calls": "calls",
+    "recentLogs": "Recent logs",
+    "noLogs": "No logs"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Server Error",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "toggleTheme": "Toggle theme",
+    "menu": "Menu"
+  }
+}

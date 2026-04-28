@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// MVP Phase 1: Only User, ChatSession, LLMLog
+// Auth is handled by Supabase Auth (JWT in headers)
+// Phase 2 will add: CVAnalysis, JobOffer, UserUsage
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  supabaseId String  @unique  // Supabase Auth UID
+
+  // Profile data (can be encrypted: name, preferences, etc)
+  profile   Json?
+
+  // Relations
+  chatSessions ChatSession[]
+  llmLogs      LLMLog[]
+
+  // RGPD: soft delete support
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  @@index([supabaseId])
+  @@index([deletedAt])
+}
+
+model ChatSession {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Chat metadata
+  title     String   @default("Untitled Chat")
+
+  // Messages array (encrypted): [{role: "user"|"assistant", content: string, tokens: number}, ...]
+  messages  Json     @default("[]")
+
+  // Session stats
+  totalTurns    Int       @default(0)
+  averageScore  Float?
+
+  // LLM usage for this session
+  inputTokens   Int       @default(0)
+  outputTokens  Int       @default(0)
+  costUSD       Float     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  // Relation to score breakdowns
+  scoreBreakdowns ScoreBreakdown[]
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([deletedAt])
+}
+
+model ScoreBreakdown {
+  id            String   @id @default(cuid())
+  sessionId     String
+  messageIndex  Int
+
+  // 5-criterion scoring breakdown
+  pertinence    Int      // 0-30
+  clarte        Int      // 0-20 (without accent for DB)
+  exemples      Int      // 0-20
+  profondeur    Int      // 0-20
+  communication Int      // 0-10
+  totalScore    Int      // sum of all criteria
+
+  createdAt     DateTime @default(now())
+
+  // Relation
+  session       ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  // Ensure one breakdown per message
+  @@unique([sessionId, messageIndex])
+  @@index([sessionId])
+}
+
+model LLMLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // API call details
+  model         String   // "gpt-4o-mini", "gpt-4o"
+  feature       String   // "chat_turn", "summarization"
+
+  inputTokens   Int
+  outputTokens  Int
+  costUSD       Float
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}

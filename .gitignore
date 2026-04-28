@@ -30,8 +30,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# env files (only commit .env.example)
+.env.local
+.env.*.local
+.env
 
 # vercel
 .vercel
@@ -39,3 +41,32 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Secrets & Local Config
+.env.example.local
+.env.test.local
+
+# Build artifacts
+dist/
+build/
+
+# Claude Code project cache
+.claude/
+.swc/
+
+# IDE & local config
+.mcp.json

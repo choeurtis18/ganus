@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ganus.fr — Interview Prep Platform
 
-## Getting Started
+AI-powered interview prep for French students (internship/apprentice/CDI seekers).
 
-First, run the development server:
+**Stack**: Next.js 14 (App Router) • TypeScript • Supabase • OpenAI • Stripe
+
+## Quick Start
+
+### Prerequisites
+- Node.js 20+
+- Supabase project (create at supabase.com)
+- OpenAI API key
+
+### Setup
+
+1. **Clone & install**
+   ```bash
+   npm install
+   ```
+
+2. **Configure environment**
+   ```bash
+   cp .env.example .env.local
+   # Fill in Supabase URL, OpenAI key, etc.
+   ```
+
+3. **Setup database**
+   ```bash
+   npx prisma migrate dev --name init
+   ```
+
+4. **Run dev server**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000)
+
+## Project Structure
+
+- **[.claude/](/.claude/)** — Claude Code hub (STATUS, RULES, MEMORY, PLANS)
+- **[src/](src/)** — Application code (pages, components, utilities)
+- **[prisma/](prisma/)** — Database schema & migrations
+- **[__tests__/](__tests__/)** — Unit, integration, E2E tests
+- **[docs/](docs/)** — Project documentation
+
+👉 **Start with** [.claude/README.md](./.claude/README.md) to understand project info.
+
+## Commands
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev              # Start dev server
+npm run build            # Production build
+npm test                 # Run Jest tests
+npm run test:e2e         # Run Playwright tests
+npx tsc --noEmit         # Check TypeScript
+npm run migrate          # Prisma migrations
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Architecture
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Key Patterns** (see [.claude/CLAUDE.md](./.claude/CLAUDE.md)):
+- API routes: parse → auth → rate-limit → business logic → track costs
+- LLM strategy: gpt-4o-mini (cheap) + gpt-4o (quality)
+- Hybrid chat: simple flow (< 10 msgs) + summarized flow (≥ 10 msgs)
+- Encryption: AES-256-CBC field-level for sensitive data
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## MVP Roadmap (Option A)
 
-## Learn More
+**Sprint 1: Foundation (Setup + Auth)**
+- Phase 1.1: Supabase + Prisma setup
+- Phase 1.2: NextAuth + User model
+- Phase 1.3: Chat core + UI foundation
 
-To learn more about Next.js, take a look at the following resources:
+**Sprint 2: LLM Integration**
+- OpenAI integration
+- Streaming responses
+- Cost tracking
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Sprint 3: Polish**
+- Error handling
+- Rate limiting
+- E2E tests
+- Beta-ready
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Phase 2** (After MVP validation)
+- CV Analysis (5 LLM calls)
+- Job Analysis (5 LLM calls)
+- Subscription system + Stripe
 
-## Deploy on Vercel
+**Current**: MVP Sprint 1 Phase 1.1 (Just starting)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Important Links
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 📖 [CLAUDE.md](./.claude/CLAUDE.md) — Project instructions & architecture
+- 🧠 [Memory Index](./.claude/memory/MEMORY.md) — Technical decisions & context
+- 🎯 [MVP Plan](./.claude/plans/mvp-sprint-1.md) — Sprint 1 breakdown
+
+---
+
+**Built with ❤️ for interview prep**
