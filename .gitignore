@@ -55,10 +55,13 @@ Thumbs.db
 # Logs
 logs/
 *.log
+!src/**/logs/
+!src/**/logs/**
 
 # Secrets & Local Config
 .env.example.local
 .env.test.local
+.env
 
 # Build artifacts
 dist/
