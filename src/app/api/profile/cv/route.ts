@@ -21,11 +21,11 @@ async function extractTextWithOcr(buffer: Buffer): Promise<string> {
     const formData = new FormData()
     formData.append('filename', 'cv.pdf')
     formData.append('filetype', 'PDF')
-    formData.append('apikey', 'K87899142372222') // OCR.space free tier
+    formData.append('language', 'fre') // French language
     const blob = new Blob([new Uint8Array(buffer)], { type: 'application/pdf' })
     formData.append('file', blob)
 
-    console.log('[OCR] Sending request to OCR.space, blob size:', blob.size)
+    console.log('[OCR] Sending request to OCR.space (free tier), blob size:', blob.size)
     const res = await fetch('https://api.ocr.space/parse/image', {
       method: 'POST',
       body: formData,
@@ -33,13 +33,14 @@ async function extractTextWithOcr(buffer: Buffer): Promise<string> {
 
     console.log('[OCR] Response status:', res.status)
     const result = await res.json()
-    console.log('[OCR] Response:', JSON.stringify(result).substring(0, 200))
+    console.log('[OCR] Response keys:', Object.keys(result))
 
     if (!result.IsErroredOnProcessing && result.ParsedText) {
-      console.log('[OCR] Success, text length:', result.ParsedText.trim().length)
-      return result.ParsedText.trim()
+      const text = result.ParsedText.replace(/\s+/g, ' ').trim()
+      console.log('[OCR] Success, text length:', text.length)
+      return text
     }
-    console.log('[OCR] Error or no text:', result.ErrorMessage || result.ErrorDetails || 'Unknown error')
+    console.log('[OCR] Failed:', result.ErrorMessage || result.ErrorDetails || `IsErrored: ${result.IsErroredOnProcessing}`)
     return ''
   } catch (error) {
     console.error('[OCR] Exception:', error instanceof Error ? error.message : error)
@@ -83,17 +84,18 @@ export async function POST(request: NextRequest) {
       console.log('[profile/cv POST] buffer size:', buffer.length, 'bytes')
       const parsed = await pdfParse(buffer)
       console.log('[profile/cv POST] pdf-parse result keys:', Object.keys(parsed))
-      cvText = parsed.text?.trim() ?? ''
-      console.log('[profile/cv POST] raw text length:', parsed.text?.length ?? 0)
+      const rawText = parsed.text ?? ''
+      console.log('[profile/cv POST] raw text length:', rawText.length, 'chars')
+      // Remove extra whitespace but preserve content
+      cvText = rawText.replace(/\s+/g, ' ').trim()
+      console.log('[profile/cv POST] cleaned text length:', cvText.length)
     } catch (error) {
       console.error('[profile/cv POST] pdf-parse error:', error instanceof Error ? error.message : error)
     }
 
-    console.log('[profile/cv POST] extracted text length:', cvText.length)
-
-    // If no text extracted, try OCR for scanned PDFs
+    // If no meaningful text extracted, try OCR for scanned PDFs
     if (cvText.length === 0) {
-      console.log('[profile/cv POST] attempting OCR on scanned PDF...')
+      console.log('[profile/cv POST] no text content found, attempting OCR...')
       cvText = await extractTextWithOcr(buffer)
       console.log('[profile/cv POST] OCR extracted text length:', cvText.length)
     }
