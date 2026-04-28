@@ -29,7 +29,7 @@
       "title": "Create Account",
       "subtitle": "Join 500+ students preparing for interviews",
       "heroTitle": "Join the community.",
-      "heroSubtitle": "Thousands of students prepare their interviews with Genus.",
+      "heroSubtitle": "Thousands of students prepare their interviews with Ganus.",
       "features": {
         "free": "Free account",
         "access": "Instant access",
@@ -80,6 +80,110 @@
       "rateLimited": "Too many messages. Please try again later."
     }
   },
+  "landing": {
+    "hero": {
+      "title": "Ace your interviews with AI",
+      "subtitle": "Realistic simulations, instant feedback, measurable progress. For students who want to land their internship, apprenticeship or first job.",
+      "cta": "Get started for free",
+      "login": "Already have an account? Sign in",
+      "badge": "Free beta — Instant access"
+    },
+    "features": {
+      "title": "Everything you need to succeed",
+      "chat": {
+        "title": "AI-powered interview simulation",
+        "desc": "Realistic questions tailored to your profile, just like a real recruiter."
+      },
+      "feedback": {
+        "title": "Instant feedback",
+        "desc": "Detailed score after each answer: relevance, clarity, examples, depth."
+      },
+      "dashboard": {
+        "title": "Progress tracking",
+        "desc": "Visualize your evolution over time and identify areas to improve."
+      },
+      "cv": {
+        "title": "CV analysis",
+        "desc": "Upload your CV, the AI highlights strengths, weaknesses and advice."
+      }
+    },
+    "howItWorks": {
+      "title": "How does it work?",
+      "step1": { "title": "Create your profile", "desc": "Fill in your domain, level and the positions you're targeting." },
+      "step2": { "title": "Practice", "desc": "Start an AI interview session and answer the questions." },
+      "step3": { "title": "Progress", "desc": "Check your dashboard to track your progress and get advice." }
+    },
+    "header": {
+      "login": "Sign in"
+    },
+    "cta": {
+      "title": "Ready to land your next role?",
+      "button": "Create my free account"
+    },
+    "footer": "AI-powered interview preparation"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Hello",
+    "stats": {
+      "title": "Overview",
+      "messages": "Messages sent",
+      "avgScore": "Average score",
+      "cvScore": "CV score",
+      "noCv": "CV not analyzed",
+      "sessions": "Sessions"
+    },
+    "scoreChart": {
+      "title": "Score progression",
+      "noData": "No data yet. Start an interview session to begin.",
+      "week": "Wk"
+    },
+    "improvements": {
+      "title": "Areas to improve",
+      "empty": "Keep practicing to get personalized recommendations."
+    },
+    "tips": {
+      "title": "Personalized tips",
+      "empty": "Upload your CV to receive advice tailored to your profile.",
+      "uploadCv": "Analyze my CV"
+    },
+    "recentChats": {
+      "title": "Recent sessions",
+      "empty": "No sessions yet.",
+      "startNew": "Start a session",
+      "score": "Avg. score",
+      "noScore": "—"
+    }
+  },
+  "cv": {
+    "title": "My CV",
+    "upload": {
+      "label": "Upload my CV",
+      "hint": "PDF, JPG, PNG · Max 5 MB",
+      "drag": "Drag your CV here or click to choose",
+      "button": "Choose file",
+      "uploading": "Analyzing...",
+      "success": "CV analyzed successfully",
+      "replace": "Replace CV"
+    },
+    "analysis": {
+      "title": "CV Analysis",
+      "score": "Overall score",
+      "strengths": "Strengths",
+      "improvements": "To improve",
+      "suggestions": "Suggestions for your target positions"
+    },
+    "rateLimit": {
+      "message": "You've reached the analysis limit (2 per day). Try again tomorrow.",
+      "remaining": "Analyses remaining today"
+    },
+    "errors": {
+      "tooLarge": "File exceeds 5 MB",
+      "invalidType": "Invalid format — PDF, JPG or PNG only",
+      "uploadFailed": "Upload failed",
+      "analysisFailed": "Analysis failed"
+    }
+  },
   "profile": {
     "title": "Profile",
     "accountInfo": "Account Information",
@@ -106,6 +210,28 @@
     "cancel": "Cancel",
     "confirmDelete": "Confirm Deletion",
     "deleting": "Deleting...",
+    "personalInfo": "Personal Information",
+    "nom": "Last name",
+    "prenom": "First name",
+    "age": "Age",
+    "nomPlaceholder": "Smith",
+    "prenomPlaceholder": "Alice",
+    "agePlaceholder": "22",
+    "professionalProfile": "Professional Profile",
+    "domaine": "Domain",
+    "sousDomaine": "Specialty",
+    "niveau": "Experience level",
+    "selectDomaine": "Choose a domain",
+    "selectSousDomaine": "Choose a specialty",
+    "selectNiveau": "Choose your level",
+    "targetedJobs": "Target positions",
+    "jobsSearchPlaceholder": "E.g.: Full-Stack Developer...",
+    "jobsHint": "Start typing to see suggestions. Max 5 positions.",
+    "addJob": "Add",
+    "maxJobsReached": "Maximum 5 positions reached",
+    "saveProfile": "Save",
+    "savingProfile": "Saving...",
+    "profileSaved": "Profile saved",
     "errors": {
       "passwordValidation": "Password must be at least 8 characters",
       "passwordMismatch": "Passwords do not match",
@@ -114,17 +240,19 @@
       "exportFailed": "Failed to export data",
       "deleteFailed": "Failed to delete account",
       "loadProfileFailed": "Failed to load profile",
-      "loadProfile": "Error loading profile"
+      "loadProfile": "Error loading profile",
+      "saveFailed": "Failed to save profile",
+      "invalidAge": "Age must be between 18 and 99"
     }
   },
   "layout": {
-    "appName": "Genus",
+    "appName": "Ganus",
     "nav": {
-      "home": "Home",
+      "home": "Dashboard",
       "chat": "AI Interview",
-      "history": "History",
-      "cv": "CV Analysis",
-      "profile": "Profile"
+      "profile": "Profile",
+      "cv": "My CV",
+      "history": "History"
     },
     "themeLight": "Light mode",
     "themeDark": "Dark mode",
@@ -177,7 +305,54 @@
     "noData": "No data",
     "calls": "calls",
     "recentLogs": "Recent logs",
-    "noLogs": "No logs"
+    "noLogs": "No logs",
+    "tabs": {
+      "stats": "Statistics",
+      "users": "Users",
+      "logs": "Logs",
+      "storage": "Storage"
+    },
+    "users": {
+      "title": "Users",
+      "email": "Email",
+      "role": "Role",
+      "createdAt": "Joined",
+      "sessions": "Sessions",
+      "cost": "Cost",
+      "actions": "Actions",
+      "changeRole": "Change role",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this user? This action is irreversible.",
+      "roleUpdated": "Role updated",
+      "deleted": "User deleted",
+      "noUsers": "No users",
+      "roles": {
+        "user": "User",
+        "admin": "Admin"
+      }
+    },
+    "logs": {
+      "title": "LLM Logs",
+      "feature": "Feature",
+      "model": "Model",
+      "tokens": "Tokens",
+      "cost": "Cost",
+      "date": "Date",
+      "noLogs": "No logs",
+      "loadMore": "Load more"
+    },
+    "storage": {
+      "title": "Storage",
+      "cvCount": "CVs uploaded",
+      "totalSize": "Total size",
+      "noData": "No data"
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "backHome": "Back to home",
+    "goToChat": "Go to chat"
   },
   "common": {
     "loading": "Loading...",

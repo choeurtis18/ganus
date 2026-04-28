@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase-server'
 import { prisma } from '@/lib/db'
 import { errorResponse, successResponse, generateRequestId } from '@/lib/api-response'
 import { ERROR_CODES, getErrorMessage } from '@/lib/error-messages'
-import { analyzeCv } from '@/lib/llm-cv'
+import { analyzeCv, analyzeCvFromImage, type SupportedMimeType } from '@/lib/llm-cv'
 
 const adminStorage = createSupabaseAdmin(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,6 +15,8 @@ const adminStorage = createSupabaseAdmin(
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
 const MAX_ANALYSES_PER_DAY = 2
+const ACCEPTED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'] as const
+type AcceptedType = typeof ACCEPTED_TYPES[number]
 
 async function extractTextWithOcr(buffer: Buffer): Promise<string> {
   try {
@@ -73,60 +75,62 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const file = formData.get('cv') as File | null
     if (!file) return errorResponse('Fichier manquant', requestId, 400)
-    if (file.type !== 'application/pdf') return errorResponse('PDF uniquement', requestId, 400)
+    if (!ACCEPTED_TYPES.includes(file.type as AcceptedType)) {
+      return errorResponse('Format invalide — PDF, JPG, PNG ou WebP uniquement', requestId, 400)
+    }
     if (file.size > MAX_FILE_SIZE) return errorResponse('Fichier > 5 MB', requestId, 400)
 
     const buffer = Buffer.from(await file.arrayBuffer())
+    const isImage = file.type !== 'application/pdf'
+    const postes = Array.isArray(user.postesRecherches) ? user.postesRecherches as string[] : []
 
-    // Extract text from PDF
-    let cvText = ''
-    try {
-      console.log('[profile/cv POST] buffer size:', buffer.length, 'bytes')
-      const parsed = await pdfParse(buffer)
-      console.log('[profile/cv POST] pdf-parse result keys:', Object.keys(parsed))
-      const rawText = parsed.text ?? ''
-      console.log('[profile/cv POST] raw text length:', rawText.length, 'chars')
-      // Remove extra whitespace but preserve content
-      cvText = rawText.replace(/\s+/g, ' ').trim()
-      console.log('[profile/cv POST] cleaned text length:', cvText.length)
-    } catch (error) {
-      console.error('[profile/cv POST] pdf-parse error:', error instanceof Error ? error.message : error)
-    }
-
-    // If no meaningful text extracted, try OCR for scanned PDFs
-    if (cvText.length === 0) {
-      console.log('[profile/cv POST] no text content found, attempting OCR...')
-      cvText = await extractTextWithOcr(buffer)
-      console.log('[profile/cv POST] OCR extracted text length:', cvText.length)
-    }
-
-    if (cvText.length === 0) {
-      return errorResponse('PDF sans contenu textuel. Vérifiez que votre PDF contient du texte ou des images claires.', requestId, 400)
-    }
-    if (cvText.length < 50) {
-      return errorResponse('PDF trop court — au minimum 50 caractères requis pour analyser', requestId, 400)
-    }
-
-    // Upload to Supabase Storage (admin client bypasses RLS)
-    const storagePath = `${authUser.id}/cv.pdf`
+    // Upload to Supabase Storage
+    const ext = isImage ? file.type.split('/')[1] : 'pdf'
+    const storagePath = `${authUser.id}/cv.${ext}`
     const { error: uploadError } = await adminStorage.storage
       .from('cvs')
-      .upload(storagePath, buffer, { contentType: 'application/pdf', upsert: true })
+      .upload(storagePath, buffer, { contentType: file.type, upsert: true })
     if (uploadError) {
       console.error('[profile/cv POST] storage upload', uploadError.message)
       return errorResponse('Erreur upload', requestId, 500)
     }
 
-    // Analyze with LLM
-    const postes = Array.isArray(user.postesRecherches) ? user.postesRecherches as string[] : []
-    const analysis = await analyzeCv(cvText, postes, user.id)
+    let analysis
+    let cvText = ''
+
+    if (isImage) {
+      // Image → GPT-4-Vision
+      const base64 = buffer.toString('base64')
+      analysis = await analyzeCvFromImage(base64, file.type as SupportedMimeType, postes, user.id)
+    } else {
+      // PDF → try text extraction
+      try {
+        const parsed = await pdfParse(buffer)
+        cvText = (parsed.text ?? '').replace(/\s+/g, ' ').trim()
+        console.log('[profile/cv POST] extracted text length:', cvText.length)
+      } catch (error) {
+        console.error('[profile/cv POST] pdf-parse error:', error instanceof Error ? error.message : error)
+      }
+
+      if (cvText.length === 0) {
+        return errorResponse(
+          'Ce PDF ne contient pas de texte extractible. Exportez votre CV en PDF natif (depuis Word, Canva…) ou téléchargez une image (JPG/PNG).',
+          requestId, 400
+        )
+      }
+      if (cvText.length < 50) {
+        return errorResponse('PDF trop court — au minimum 50 caractères requis', requestId, 400)
+      }
+
+      analysis = await analyzeCv(cvText, postes, user.id)
+    }
 
     // Save to DB
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        cvUrl: storagePath, // authUser.id/cv.pdf
-        cvText,
+        cvUrl: storagePath,
+        cvText: cvText || null,
         cvAnalysis: analysis as unknown as import('@prisma/client').Prisma.InputJsonValue,
         cvAnalysisAt: now,
         cvAnalysisCount: analysisAge > 24 * 60 * 60 * 1000 ? 1 : count + 1,

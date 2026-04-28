@@ -29,7 +29,7 @@
       "title": "Créer un compte",
       "subtitle": "Rejoignez 500+ étudiants qui préparent leurs entretiens",
       "heroTitle": "Rejoignez la communauté.",
-      "heroSubtitle": "Des milliers d'étudiants préparent leurs entretiens avec Genus.",
+      "heroSubtitle": "Des milliers d'étudiants préparent leurs entretiens avec Ganus.",
       "features": {
         "free": "Compte gratuit",
         "access": "Accès immédiat",
@@ -80,6 +80,110 @@
       "rateLimited": "Trop de messages. Veuillez réessayer plus tard."
     }
   },
+  "landing": {
+    "hero": {
+      "title": "Prépare ton entretien avec l'IA",
+      "subtitle": "Simulations réalistes, feedback instantané, progression mesurable. Pour les étudiants qui veulent décrocher leur stage, alternance ou CDI.",
+      "cta": "Commencer gratuitement",
+      "login": "Déjà un compte ? Se connecter",
+      "badge": "Beta gratuite — Accès immédiat"
+    },
+    "features": {
+      "title": "Tout ce qu'il te faut pour réussir",
+      "chat": {
+        "title": "Entretien simulé par IA",
+        "desc": "Des questions réalistes adaptées à ton profil, comme avec un vrai recruteur."
+      },
+      "feedback": {
+        "title": "Feedback instantané",
+        "desc": "Score détaillé après chaque réponse : pertinence, clarté, exemples, profondeur."
+      },
+      "dashboard": {
+        "title": "Suivi de ta progression",
+        "desc": "Visualise ton évolution dans le temps et identifie tes axes d'amélioration."
+      },
+      "cv": {
+        "title": "Analyse de CV",
+        "desc": "Upload ton CV, l'IA t'indique les points forts, les faiblesses et les conseils."
+      }
+    },
+    "howItWorks": {
+      "title": "Comment ça marche ?",
+      "step1": { "title": "Crée ton profil", "desc": "Renseigne ton domaine, ton niveau et les postes que tu vises." },
+      "step2": { "title": "Entraîne-toi", "desc": "Lance une session d'entretien IA et réponds aux questions." },
+      "step3": { "title": "Progresse", "desc": "Consulte ton dashboard pour suivre ta progression et tes conseils." }
+    },
+    "header": {
+      "login": "Se connecter"
+    },
+    "cta": {
+      "title": "Prêt à décrocher ton prochain poste ?",
+      "button": "Créer mon compte gratuit"
+    },
+    "footer": "Préparation aux entretiens par IA"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bonjour",
+    "stats": {
+      "title": "Vue d'ensemble",
+      "messages": "Messages envoyés",
+      "avgScore": "Score moyen",
+      "cvScore": "Score du CV",
+      "noCv": "CV non analysé",
+      "sessions": "Sessions"
+    },
+    "scoreChart": {
+      "title": "Progression du score",
+      "noData": "Pas encore de données. Lance une session d'entretien pour commencer.",
+      "week": "Sem."
+    },
+    "improvements": {
+      "title": "Points à améliorer",
+      "empty": "Continue tes entretiens pour obtenir des recommandations personnalisées."
+    },
+    "tips": {
+      "title": "Conseils personnalisés",
+      "empty": "Upload ton CV pour recevoir des conseils adaptés à ton profil.",
+      "uploadCv": "Analyser mon CV"
+    },
+    "recentChats": {
+      "title": "Dernières sessions",
+      "empty": "Aucune session pour l'instant.",
+      "startNew": "Démarrer une session",
+      "score": "Score moyen",
+      "noScore": "—"
+    }
+  },
+  "cv": {
+    "title": "Mon CV",
+    "upload": {
+      "label": "Uploader mon CV",
+      "hint": "PDF, JPG, PNG · Max 5 MB",
+      "drag": "Glisse ton CV ici ou clique pour choisir",
+      "button": "Choisir un fichier",
+      "uploading": "Analyse en cours...",
+      "success": "CV analysé avec succès",
+      "replace": "Remplacer le CV"
+    },
+    "analysis": {
+      "title": "Analyse de ton CV",
+      "score": "Score global",
+      "strengths": "Points forts",
+      "improvements": "À améliorer",
+      "suggestions": "Suggestions pour tes postes cibles"
+    },
+    "rateLimit": {
+      "message": "Tu as atteint la limite d'analyses (2 par jour). Réessaie demain.",
+      "remaining": "Analyses restantes aujourd'hui"
+    },
+    "errors": {
+      "tooLarge": "Le fichier dépasse 5 MB",
+      "invalidType": "Format invalide — PDF, JPG ou PNG uniquement",
+      "uploadFailed": "Erreur lors de l'upload",
+      "analysisFailed": "Erreur lors de l'analyse"
+    }
+  },
   "profile": {
     "title": "Profil",
     "accountInfo": "Informations du compte",
@@ -106,6 +210,28 @@
     "cancel": "Annuler",
     "confirmDelete": "Confirmer la suppression",
     "deleting": "Suppression...",
+    "personalInfo": "Informations personnelles",
+    "nom": "Nom",
+    "prenom": "Prénom",
+    "age": "Âge",
+    "nomPlaceholder": "Dupont",
+    "prenomPlaceholder": "Alice",
+    "agePlaceholder": "22",
+    "professionalProfile": "Profil professionnel",
+    "domaine": "Domaine",
+    "sousDomaine": "Spécialité",
+    "niveau": "Niveau d'expérience",
+    "selectDomaine": "Choisir un domaine",
+    "selectSousDomaine": "Choisir une spécialité",
+    "selectNiveau": "Choisir votre niveau",
+    "targetedJobs": "Postes recherchés",
+    "jobsSearchPlaceholder": "Ex: Développeur Full-Stack...",
+    "jobsHint": "Commence à taper pour voir les suggestions. Max 5 postes.",
+    "addJob": "Ajouter",
+    "maxJobsReached": "Maximum 5 postes atteint",
+    "saveProfile": "Sauvegarder",
+    "savingProfile": "Sauvegarde...",
+    "profileSaved": "Profil sauvegardé",
     "errors": {
       "passwordValidation": "Le mot de passe doit contenir au moins 8 caractères",
       "passwordMismatch": "Les mots de passe ne correspondent pas",
@@ -114,17 +240,19 @@
       "exportFailed": "Impossible d'exporter les données",
       "deleteFailed": "Impossible de supprimer le compte",
       "loadProfileFailed": "Impossible de charger le profil",
-      "loadProfile": "Erreur lors du chargement du profil"
+      "loadProfile": "Erreur lors du chargement du profil",
+      "saveFailed": "Impossible de sauvegarder le profil",
+      "invalidAge": "L'âge doit être compris entre 18 et 99 ans"
     }
   },
   "layout": {
-    "appName": "Genus",
+    "appName": "Ganus",
     "nav": {
-      "home": "Accueil",
+      "home": "Dashboard",
       "chat": "Entretien IA",
-      "history": "Historique",
-      "cv": "Analyse CV",
-      "profile": "Profil"
+      "profile": "Profil",
+      "cv": "Mon CV",
+      "history": "Historique"
     },
     "themeLight": "Mode clair",
     "themeDark": "Mode sombre",
@@ -177,7 +305,54 @@
     "noData": "Aucune donnée",
     "calls": "appels",
     "recentLogs": "Logs récents",
-    "noLogs": "Aucun log"
+    "noLogs": "Aucun log",
+    "tabs": {
+      "stats": "Statistiques",
+      "users": "Utilisateurs",
+      "logs": "Logs",
+      "storage": "Stockage"
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "email": "Email",
+      "role": "Rôle",
+      "createdAt": "Inscrit le",
+      "sessions": "Sessions",
+      "cost": "Coût",
+      "actions": "Actions",
+      "changeRole": "Changer le rôle",
+      "delete": "Supprimer",
+      "deleteConfirm": "Supprimer cet utilisateur ? Cette action est irréversible.",
+      "roleUpdated": "Rôle mis à jour",
+      "deleted": "Utilisateur supprimé",
+      "noUsers": "Aucun utilisateur",
+      "roles": {
+        "user": "Utilisateur",
+        "admin": "Admin"
+      }
+    },
+    "logs": {
+      "title": "Logs LLM",
+      "feature": "Feature",
+      "model": "Modèle",
+      "tokens": "Tokens",
+      "cost": "Coût",
+      "date": "Date",
+      "noLogs": "Aucun log",
+      "loadMore": "Charger plus"
+    },
+    "storage": {
+      "title": "Stockage",
+      "cvCount": "CVs uploadés",
+      "totalSize": "Taille totale",
+      "noData": "Aucune donnée"
+    }
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "description": "La page que tu cherches n'existe pas ou a été déplacée.",
+    "backHome": "Retour à l'accueil",
+    "goToChat": "Aller au chat"
   },
   "common": {
     "loading": "Chargement...",
