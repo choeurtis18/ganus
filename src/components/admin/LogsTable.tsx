@@ -130,11 +130,11 @@ export default function LogsTable({ adminSecret }: LogsTableProps) {
         </div>
       )}
 
-      {/* Pagination */}
-      {pages > 1 && (
+      {/* Pagination — always visible when data loaded */}
+      {total > 0 && (
         <div className="flex justify-center items-center gap-2 mt-4">
           <Button size="sm" variant="outline" disabled={page <= 1} onClick={() => fetchLogs(page - 1)}>←</Button>
-          <span className="text-text-secondary text-sm">{page} / {pages}</span>
+          <span className="text-text-secondary text-sm">{page} / {Math.max(1, pages)}</span>
           <Button size="sm" variant="outline" disabled={page >= pages} onClick={() => fetchLogs(page + 1)}>→</Button>
         </div>
       )}

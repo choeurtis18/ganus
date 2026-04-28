@@ -197,10 +197,10 @@ export default function UserTable({ adminSecret }: UserTableProps) {
           </div>
         )}
 
-        {total > 20 && (
+        {total > 0 && (
           <div className="flex justify-center gap-2 mt-4">
             <Button size="sm" variant="outline" disabled={page <= 1} onClick={() => fetchUsers(page - 1)}>←</Button>
-            <span className="text-text-secondary text-sm self-center">{page} / {Math.ceil(total / 20)}</span>
+            <span className="text-text-secondary text-sm self-center">{page} / {Math.max(1, Math.ceil(total / 20))}</span>
             <Button size="sm" variant="outline" disabled={page >= Math.ceil(total / 20)} onClick={() => fetchUsers(page + 1)}>→</Button>
           </div>
         )}

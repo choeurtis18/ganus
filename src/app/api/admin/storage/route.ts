@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       return errorResponse(getErrorMessage(ERROR_CODES.UNAUTHORIZED), requestId, 401)
     }
 
-    // List all folders (one per user) in the cvs bucket
+    // List root — entries with id=null are folders (user UUIDs), entries with id are files
     const { data: folders, error } = await adminStorage.storage
       .from('cvs')
       .list('', { limit: 1000 })
@@ -29,19 +29,25 @@ export async function GET(request: NextRequest) {
       return errorResponse('Erreur accès storage', requestId, 500)
     }
 
-    // Folders are user UUIDs — list files inside each
     let totalSize = 0
     let fileCount = 0
 
-    for (const folder of folders ?? []) {
-      if (!folder.id) continue // skip non-folder items
-      const { data: files } = await adminStorage.storage
-        .from('cvs')
-        .list(folder.name, { limit: 100 })
-
-      for (const file of files ?? []) {
+    for (const entry of folders ?? []) {
+      if (entry.id) {
+        // File at root level (shouldn't happen but handle anyway)
         fileCount++
-        totalSize += file.metadata?.size ?? 0
+        totalSize += entry.metadata?.size ?? 0
+      } else {
+        // Folder (id = null) — list files inside
+        const { data: files } = await adminStorage.storage
+          .from('cvs')
+          .list(entry.name, { limit: 100 })
+
+        for (const file of files ?? []) {
+          if (!file.id) continue // skip sub-folders
+          fileCount++
+          totalSize += file.metadata?.size ?? 0
+        }
       }
     }
 
