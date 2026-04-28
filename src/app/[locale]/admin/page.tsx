@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -47,12 +47,20 @@ const FEATURE_LABELS: Record<string, { label: string; color: 'teal' | 'gold' | '
 export default function AdminPage() {
   const t = useTranslations('admin')
   const [stats, setStats] = useState<Stats | null>(null)
-  const [secret, setSecret] = useState('')
+  const [secret, setSecret] = useState(() =>
+    typeof window !== 'undefined' ? sessionStorage.getItem('admin_secret') ?? '' : ''
+  )
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [tab, setTab] = useState<Tab>('stats')
   const [storage, setStorage] = useState<{ fileCount: number; totalSizeBytes: number } | null>(null)
   const [storageLoading, setStorageLoading] = useState(false)
+
+  // Auto-reconnect if secret already in session
+  useEffect(() => {
+    const saved = sessionStorage.getItem('admin_secret')
+    if (saved && !stats) fetchStats(saved)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchStats = async (s?: string) => {
     const adminSecret = s ?? secret
@@ -63,7 +71,8 @@ export default function AdminPage() {
       const res = await fetch('/api/admin/stats', {
         headers: { 'x-admin-secret': adminSecret },
       })
-      if (!res.ok) { setError(t('invalidSecret')); return }
+      if (!res.ok) { setError(t('invalidSecret')); sessionStorage.removeItem('admin_secret'); return }
+      sessionStorage.setItem('admin_secret', adminSecret)
       const body = await res.json()
       setStats(body.data ?? body)
     } catch {
