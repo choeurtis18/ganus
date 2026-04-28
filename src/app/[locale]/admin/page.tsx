@@ -50,6 +50,8 @@ export default function AdminPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [tab, setTab] = useState<Tab>('stats')
+  const [logSearch, setLogSearch] = useState('')
+  const [logFeature, setLogFeature] = useState<string>('all')
 
   const fetchStats = async (s?: string) => {
     const adminSecret = s ?? secret
@@ -178,36 +180,75 @@ export default function AdminPage() {
           </Card>
         )}
 
-        {tab === 'logs' && (
-          <Card padding="p-5">
-            <h2 className="text-lg font-semibold text-text-primary mb-4">{t('logs.title')}</h2>
-            {stats.recentLogs.length === 0 ? (
-              <p className="text-text-muted text-sm">{t('noLogs')}</p>
-            ) : (
-              <div className="flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
-                {stats.recentLogs.map((log) => {
-                  const feat = FEATURE_LABELS[log.feature] ?? { label: log.feature, color: 'navy' as const }
-                  return (
-                    <div key={log.id} className="flex justify-between items-start p-3 bg-bg rounded-lg text-sm gap-3">
-                      <div className="flex-1 min-w-0">
-                        <p className="text-text-primary font-medium whitespace-nowrap overflow-hidden text-ellipsis">{log.email}</p>
-                        <div className="flex flex-wrap gap-1.5 mt-1">
-                          <Badge color={feat.color} size="sm">{feat.label}</Badge>
-                          <Badge color="navy" size="sm">{log.model}</Badge>
-                          <p className="text-text-muted text-xs self-center">{log.inputTokens + log.outputTokens} tokens</p>
+        {tab === 'logs' && (() => {
+          const filteredLogs = stats.recentLogs.filter((log) => {
+            const matchSearch = log.email.toLowerCase().includes(logSearch.toLowerCase())
+            const matchFeature = logFeature === 'all' || log.feature === logFeature
+            return matchSearch && matchFeature
+          })
+          return (
+            <Card padding="p-5">
+              <h2 className="text-lg font-semibold text-text-primary mb-4">{t('logs.title')}</h2>
+
+              {/* Filters */}
+              <div className="flex flex-col sm:flex-row gap-2 mb-4">
+                <input
+                  type="text"
+                  placeholder="Rechercher par email..."
+                  value={logSearch}
+                  onChange={(e) => setLogSearch(e.target.value)}
+                  className="flex-1 px-3 py-2 text-sm bg-bg border border-border rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:border-gold transition-colors"
+                />
+                <div className="flex gap-1 flex-wrap">
+                  {[
+                    { key: 'all', label: 'Tous' },
+                    { key: 'chat_turn', label: 'Chat' },
+                    { key: 'chat_feedback', label: 'Feedback' },
+                    { key: 'cv_analysis', label: 'CV' },
+                  ].map(({ key, label }) => (
+                    <button
+                      key={key}
+                      onClick={() => setLogFeature(key)}
+                      className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ${
+                        logFeature === key ? 'bg-navy text-white' : 'bg-bg border border-border text-text-secondary hover:text-text-primary'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <p className="text-text-muted text-xs mb-2">{filteredLogs.length} / {stats.recentLogs.length} logs</p>
+
+              {filteredLogs.length === 0 ? (
+                <p className="text-text-muted text-sm">{t('noLogs')}</p>
+              ) : (
+                <div className="flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
+                  {filteredLogs.map((log) => {
+                    const feat = FEATURE_LABELS[log.feature] ?? { label: log.feature, color: 'navy' as const }
+                    return (
+                      <div key={log.id} className="flex justify-between items-start p-3 bg-bg rounded-lg text-sm gap-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-text-primary font-medium whitespace-nowrap overflow-hidden text-ellipsis">{log.email}</p>
+                          <div className="flex flex-wrap gap-1.5 mt-1">
+                            <Badge color={feat.color} size="sm">{feat.label}</Badge>
+                            <Badge color="navy" size="sm">{log.model}</Badge>
+                            <p className="text-text-muted text-xs self-center">{log.inputTokens + log.outputTokens} tokens</p>
+                          </div>
+                        </div>
+                        <div className="text-right whitespace-nowrap">
+                          <p className="font-semibold text-emerald font-mono">{formatCost(log.costUSD)}</p>
+                          <p className="text-text-muted text-xs">{new Date(log.createdAt).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</p>
                         </div>
                       </div>
-                      <div className="text-right whitespace-nowrap">
-                        <p className="font-semibold text-emerald font-mono">{formatCost(log.costUSD)}</p>
-                        <p className="text-text-muted text-xs">{new Date(log.createdAt).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</p>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-          </Card>
-        )}
+                    )
+                  })}
+                </div>
+              )}
+            </Card>
+          )
+        })()}
 
         {tab === 'storage' && (
           <Card padding="p-5">

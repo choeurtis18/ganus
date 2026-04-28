@@ -56,6 +56,8 @@ export default function UserTable({ adminSecret }: UserTableProps) {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
   const [selectedUser, setSelectedUser] = useState<UserDetail | null>(null)
   const [detailLoading, setDetailLoading] = useState(false)
+  const [search, setSearch] = useState('')
+  const [roleFilter, setRoleFilter] = useState<'all' | 'user' | 'admin'>('all')
 
   const fetchUsers = async (p = 1) => {
     setLoading(true)
@@ -108,14 +110,42 @@ export default function UserTable({ adminSecret }: UserTableProps) {
     fetchUsers(page)
   }
 
+  const filtered = users.filter((u) => {
+    const matchSearch = u.email.toLowerCase().includes(search.toLowerCase())
+    const matchRole = roleFilter === 'all' || u.role === roleFilter
+    return matchSearch && matchRole
+  })
+
   return (
     <div className="flex flex-col lg:flex-row gap-4">
       {/* User list */}
       <div className="flex-1 min-w-0">
-        <div className="flex justify-between items-center mb-3">
-          <p className="text-text-secondary text-sm">{total} utilisateurs</p>
+        {/* Search + filters */}
+        <div className="flex flex-col sm:flex-row gap-2 mb-3">
+          <input
+            type="text"
+            placeholder="Rechercher par email..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="flex-1 px-3 py-2 text-sm bg-bg border border-border rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:border-gold transition-colors"
+          />
+          <div className="flex gap-1">
+            {(['all', 'user', 'admin'] as const).map((r) => (
+              <button
+                key={r}
+                onClick={() => setRoleFilter(r)}
+                className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ${
+                  roleFilter === r ? 'bg-navy text-white' : 'bg-bg border border-border text-text-secondary hover:text-text-primary'
+                }`}
+              >
+                {r === 'all' ? 'Tous' : r === 'admin' ? 'Admin' : 'Users'}
+              </button>
+            ))}
+          </div>
           <Button onClick={() => fetchUsers(page)} variant="outline" size="sm">↻</Button>
         </div>
+
+        <p className="text-text-muted text-xs mb-2">{filtered.length} / {total} utilisateurs</p>
 
         {loading ? (
           <p className="text-text-muted text-sm py-4 text-center">{t('loading')}</p>
@@ -123,7 +153,10 @@ export default function UserTable({ adminSecret }: UserTableProps) {
           <p className="text-text-muted text-sm">{t('users.noUsers')}</p>
         ) : (
           <div className="flex flex-col gap-2">
-            {users.map((u) => (
+            {filtered.length === 0 && (
+              <p className="text-text-muted text-sm py-4 text-center">Aucun résultat</p>
+            )}
+            {filtered.map((u) => (
               <div
                 key={u.id}
                 onClick={() => openDetail(u.id)}
