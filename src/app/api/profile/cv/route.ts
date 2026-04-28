@@ -16,6 +16,26 @@ const adminStorage = createSupabaseAdmin(
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
 const MAX_ANALYSES_PER_DAY = 2
 
+async function extractTextWithOcr(buffer: Buffer): Promise<string> {
+  const formData = new FormData()
+  formData.append('filename', 'cv.pdf')
+  formData.append('filetype', 'PDF')
+  formData.append('apikey', 'K87899142372222') // OCR.space free tier
+  const blob = new Blob([new Uint8Array(buffer)], { type: 'application/pdf' })
+  formData.append('file', blob)
+
+  const res = await fetch('https://api.ocr.space/parse/image', {
+    method: 'POST',
+    body: formData,
+  })
+
+  const result = await res.json()
+  if (!result.IsErroredOnProcessing) {
+    return result.ParsedText?.trim() ?? ''
+  }
+  return ''
+}
+
 export async function POST(request: NextRequest) {
   const requestId = generateRequestId()
 
@@ -47,14 +67,27 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer())
 
     // Extract text from PDF
-    const { text: cvText } = await pdfParse(buffer)
-    const textLength = cvText?.trim().length ?? 0
-    console.log('[profile/cv POST] extracted text length:', textLength)
-
-    if (textLength === 0) {
-      return errorResponse('PDF sans contenu textuel extractible. Veuillez utiliser un PDF avec couche texte ou un scanner avec OCR.', requestId, 400)
+    let cvText = ''
+    try {
+      const { text } = await pdfParse(buffer)
+      cvText = text?.trim() ?? ''
+    } catch {
+      // Silently fail if pdf-parse fails
     }
-    if (textLength < 50) {
+
+    console.log('[profile/cv POST] extracted text length:', cvText.length)
+
+    // If no text extracted, try OCR for scanned PDFs
+    if (cvText.length === 0) {
+      console.log('[profile/cv POST] attempting OCR on scanned PDF...')
+      cvText = await extractTextWithOcr(buffer)
+      console.log('[profile/cv POST] OCR extracted text length:', cvText.length)
+    }
+
+    if (cvText.length === 0) {
+      return errorResponse('PDF sans contenu textuel. Vérifiez que votre PDF contient du texte ou des images claires.', requestId, 400)
+    }
+    if (cvText.length < 50) {
       return errorResponse('PDF trop court — au minimum 50 caractères requis pour analyser', requestId, 400)
     }
 
