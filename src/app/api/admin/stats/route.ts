@@ -20,6 +20,9 @@ export async function GET(request: NextRequest) {
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate())
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
+    const thirtyDaysAgo = new Date()
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+
     const [
       totalUsers,
       totalSessions,
@@ -29,6 +32,7 @@ export async function GET(request: NextRequest) {
       costAllTime,
       recentLogs,
       costPerUser,
+      dailyLogsRaw,
     ] = await Promise.all([
       prisma.user.count(),
       prisma.chatSession.count(),
@@ -61,7 +65,19 @@ export async function GET(request: NextRequest) {
         orderBy: { _sum: { costUSD: 'desc' } },
         take: 10,
       }),
+      prisma.lLMLog.findMany({
+        where: { createdAt: { gte: thirtyDaysAgo } },
+        select: { costUSD: true, createdAt: true },
+        orderBy: { createdAt: 'asc' },
+      }),
     ])
+
+    const dailyCostMap: Record<string, number> = {}
+    for (const log of dailyLogsRaw) {
+      const date = log.createdAt.toISOString().slice(0, 10)
+      dailyCostMap[date] = (dailyCostMap[date] ?? 0) + log.costUSD
+    }
+    const dailyCosts = Object.entries(dailyCostMap).map(([date, cost]) => ({ date, cost }))
 
     const userIds = costPerUser.map((r) => r.userId)
     const users = await prisma.user.findMany({
@@ -95,6 +111,7 @@ export async function GET(request: NextRequest) {
           totalCost: r._sum.costUSD ?? 0,
           totalCalls: r._count.id,
         })),
+        dailyCosts,
       },
       requestId
     )

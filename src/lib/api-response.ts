@@ -35,13 +35,14 @@ export function successResponse<T>(
 export function errorResponse(
   error: string,
   requestId: string,
-  status = 400
+  status = 400,
+  headers?: Record<string, string>
 ) {
   return NextResponse.json(
     {
       error,
       requestId,
     } as ApiResponse,
-    { status }
+    { status, headers }
   );
 }

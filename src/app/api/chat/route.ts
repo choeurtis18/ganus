@@ -2,7 +2,8 @@ import { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { prisma } from '@/lib/db'
 import { checkRateLimit, getRateLimitHeaders } from '@/lib/rate-limit'
-import { streamChatResponse, streamStructuredResponse, logLLMCalls, type ChatMessage } from '@/lib/llm'
+import { streamChatResponse, streamStructuredResponse, logLLMCalls, type ChatMessage, type UserContext } from '@/lib/llm'
+import type { CvAnalysis } from '@/lib/llm-cv'
 import { generateTitleFromMessage } from '@/lib/chat-utils'
 import { errorResponse, generateRequestId } from '@/lib/api-response'
 import { ERROR_CODES, getErrorMessage } from '@/lib/error-messages'
@@ -19,16 +20,38 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. Get or create user
-    let user = await prisma.user.findUnique({ where: { supabaseId: authUser.id } })
+    let user = await prisma.user.findUnique({
+      where: { supabaseId: authUser.id },
+      select: {
+        id: true, email: true, supabaseId: true,
+        prenom: true, domaine: true, sousDomaine: true, niveau: true,
+        postesRecherches: true, cvAnalysis: true,
+        profile: true, role: true, nom: true, age: true,
+        profileCompletedAt: true, cvUrl: true, cvText: true,
+        cvAnalysisAt: true, cvAnalysisCount: true,
+        createdAt: true, updatedAt: true, deletedAt: true,
+      },
+    })
     if (!user) {
       user = await prisma.user.create({
         data: { supabaseId: authUser.id, email: authUser.email! },
       })
     }
 
+    // Build user context for personalized system prompt
+    const cvData = user.cvAnalysis as CvAnalysis | null
+    const userContext: UserContext = {
+      prenom: user.prenom,
+      domaine: user.domaine,
+      sousDomaine: user.sousDomaine,
+      niveau: user.niveau,
+      postesRecherches: Array.isArray(user.postesRecherches) ? user.postesRecherches as string[] : null,
+      cvStrengths: cvData?.strengths ?? null,
+    }
+
     // 3. Rate limit
-    const { allowed, remaining } = await checkRateLimit(user.id)
-    if (!allowed) {
+    const rateLimitResult = await checkRateLimit(user.id, 'chat_turn')
+    if (!rateLimitResult.allowed) {
       return errorResponse(getErrorMessage(ERROR_CODES.RATE_LIMITED), requestId, 429)
     }
 
@@ -121,15 +144,15 @@ export async function POST(request: NextRequest) {
 
     // 8. Stream response
     const stream = useStructured
-      ? await streamStructuredResponse(history, message, onComplete)
-      : await streamChatResponse(history, message, onComplete)
+      ? await streamStructuredResponse(history, message, onComplete, userContext)
+      : await streamChatResponse(history, message, onComplete, userContext)
 
     return new Response(stream, {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
         'X-Session-Id': chatSession.id,
         'X-Request-Id': requestId,
-        ...getRateLimitHeaders(remaining - 1),
+        ...getRateLimitHeaders(rateLimitResult),
       },
     })
   } catch (error) {

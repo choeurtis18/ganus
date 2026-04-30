@@ -7,6 +7,7 @@ import { useRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import ReactMarkdown from 'react-markdown'
 import { ChatSidebar } from '@/components/chat/ChatSidebar'
+import ChatReportModal from '@/components/chat/ChatReportModal'
 import { FeedbackCard } from '@/components/chat/FeedbackCard'
 import { Icon } from '@/components/ui/icon'
 import type { FeedbackData } from '@/lib/llm'
@@ -37,6 +38,7 @@ function ChatPageContent() {
   const [isMobile, setIsMobile]               = useState(false)
   const [showChat, setShowChat]               = useState(false)
   const [pendingNewChat, setPendingNewChat]   = useState(false)
+  const [reportModalOpen, setReportModalOpen] = useState(false)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef    = useRef<HTMLTextAreaElement>(null)
@@ -242,7 +244,7 @@ function ChatPageContent() {
         <div className="flex-1 flex flex-col overflow-hidden">
 
         {/* Header */}
-        <div className="px-5 py-[14px] border-b border-border-color flex items-center gap-3 bg-bg-card flex-shrink-0">
+        <div className="px-5 py-[14px] border-b border-border-color flex items-center gap-3 flex-wrap bg-bg-card flex-shrink-0">
           {isMobile ? (
             <button
               onClick={() => { setPendingNewChat(false); setShowChat(false) }}
@@ -261,7 +263,7 @@ function ChatPageContent() {
 
           <Image src="/Logo-Ganus.png" alt="Ganus" width={36} height={36} className="rounded-full flex-shrink-0 aspect-square object-contain object-top" unoptimized />
 
-          <div>
+          <div className="flex-1">
             <div className="text-sm font-semibold text-text-primary">
               {chatTitle || t('emptyState')}
             </div>
@@ -272,6 +274,15 @@ function ChatPageContent() {
               </div>
             )}
           </div>
+
+          {sessionId && (
+            <button
+              onClick={() => setReportModalOpen(true)}
+              className="px-3 py-1.5 text-xs font-semibold bg-gold/10 text-gold rounded-lg border border-gold/30 hover:bg-gold/20 transition-colors flex-shrink-0"
+            >
+              {t('chatReport.title')}
+            </button>
+          )}
         </div>
 
         {/* Messages */}
@@ -435,6 +446,15 @@ function ChatPageContent() {
           )}
         </div>
       </div>
+      )}
+      {/* Report Modal */}
+      {sessionId && (
+        <ChatReportModal
+          sessionId={sessionId as string}
+          isOpen={reportModalOpen}
+          onClose={() => setReportModalOpen(false)}
+          onReportGenerated={() => setRefreshTrigger(prev => prev + 1)}
+        />
       )}
     </div>
   )

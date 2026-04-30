@@ -35,7 +35,7 @@ export default function LoginPage() {
     const msg = searchParams.get('message')
     if (msg) setMessage(decodeURIComponent(msg))
 
-    const stored = localStorage.getItem('genus_dark')
+    const stored = localStorage.getItem('ganus_dark')
     const darkMode = stored ? JSON.parse(stored) : false
     setIsDark(darkMode)
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
@@ -69,7 +69,7 @@ export default function LoginPage() {
   const toggleTheme = () => {
     const newDark = !isDark
     setIsDark(newDark)
-    localStorage.setItem('genus_dark', JSON.stringify(newDark))
+    localStorage.setItem('ganus_dark', JSON.stringify(newDark))
     document.documentElement.setAttribute('data-theme', newDark ? 'dark' : 'light')
   }
 
@@ -80,6 +80,13 @@ export default function LoginPage() {
 
   return (
     <div className="flex h-screen overflow-hidden">
+      {/* Back to home */}
+      <div className="absolute top-6 left-6 z-10">
+        <Link href="/" className="font-display font-bold text-lg text-text-primary hover:text-navy transition-colors">
+          Ganus
+        </Link>
+      </div>
+
       {/* Top Controls */}
       <div className="absolute top-6 right-6 flex gap-3 z-10">
         <button

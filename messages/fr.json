@@ -74,10 +74,24 @@
     "improvements": "À améliorer",
     "selectOrCreate": "Sélectionnez ou créez une conversation…",
     "shortcutHint": "Shift+Entrée pour envoyer · Entrée pour nouvelle ligne",
+    "chatReport": {
+      "title": "Rapport de session",
+      "generate": "Générer un rapport",
+      "generating": "Analyse en cours...",
+      "regenerate": "Régénérer l'analyse",
+      "analyzing": "Analyse en cours...",
+      "noAnalysis": "Aucune analyse pour le moment. Clique ci-dessous pour en générer une.",
+      "averageScore": "Moyenne de la discussion",
+      "strengths": "Points forts",
+      "improvements": "À améliorer",
+      "suggestions": "Suggestions"
+    },
+    "reportGenerated": "Rapport généré avec succès",
     "errors": {
       "failedToLoad": "Impossible de charger la conversation",
       "failedToSend": "Impossible d'envoyer le message",
-      "rateLimited": "Trop de messages. Veuillez réessayer plus tard."
+      "rateLimited": "Trop de messages. Veuillez réessayer plus tard.",
+      "analysisFailed": "Impossible de générer l'analyse"
     }
   },
   "landing": {
@@ -131,21 +145,29 @@
       "avgScore": "Score moyen",
       "cvScore": "Score du CV",
       "noCv": "CV non analysé",
-      "sessions": "Sessions"
+      "sessions": "Sessions",
+      "thisMonth": "ce mois"
     },
     "scoreChart": {
       "title": "Progression du score",
       "noData": "Pas encore de données. Lance une session d'entretien pour commencer.",
-      "week": "Sem."
+      "week": "Sem.",
+      "chatLine": "Score entretiens",
+      "cvLine": "Score CV"
     },
     "improvements": {
       "title": "Points à améliorer",
       "empty": "Continue tes entretiens pour obtenir des recommandations personnalisées."
     },
     "tips": {
-      "title": "Conseils personnalisés",
+      "title": "Conseils personnalisés pour ton CV",
       "empty": "Upload ton CV pour recevoir des conseils adaptés à ton profil.",
       "uploadCv": "Analyser mon CV"
+    },
+    "quickActions": {
+      "title": "Actions rapides",
+      "simulate": "Simuler un entretien",
+      "analyzeCV": "Analyser mon CV"
     },
     "recentChats": {
       "title": "Dernières sessions",
@@ -157,6 +179,7 @@
   },
   "cv": {
     "title": "Mon CV",
+    "description": "Analysez votre CV pour obtenir des conseils personnalisés",
     "upload": {
       "label": "Uploader mon CV",
       "hint": "PDF, JPG, PNG · Max 5 MB",
@@ -177,6 +200,7 @@
       "message": "Tu as atteint la limite d'analyses (2 par jour). Réessaie demain.",
       "remaining": "Analyses restantes aujourd'hui"
     },
+    "seeFullAnalysis": "Voir l'analyse complète sur mon profil",
     "errors": {
       "tooLarge": "Le fichier dépasse 5 MB",
       "invalidType": "Format invalide — PDF, JPG ou PNG uniquement",
@@ -243,6 +267,13 @@
       "loadProfile": "Erreur lors du chargement du profil",
       "saveFailed": "Impossible de sauvegarder le profil",
       "invalidAge": "L'âge doit être compris entre 18 et 99 ans"
+    },
+    "cv": {
+      "title": "Mon CV",
+      "download": "Télécharger",
+      "lastAnalysis": "Dernière analyse :",
+      "score": "Score global",
+      "seeAnalysis": "Voir l'analyse complète"
     }
   },
   "layout": {
@@ -306,6 +337,9 @@
     "calls": "appels",
     "recentLogs": "Logs récents",
     "noLogs": "Aucun log",
+    "themeLight": "Mode clair",
+    "themeDark": "Mode sombre",
+    "backToApp": "Retour à l'app",
     "tabs": {
       "stats": "Statistiques",
       "users": "Utilisateurs",

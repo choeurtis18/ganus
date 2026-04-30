@@ -1,5 +1,6 @@
 export const ERROR_CODES = {
   UNAUTHORIZED: 'UNAUTHORIZED',
+  FORBIDDEN: 'FORBIDDEN',
   RATE_LIMITED: 'RATE_LIMITED',
   INVALID_MESSAGE: 'INVALID_MESSAGE',
   SESSION_NOT_FOUND: 'SESSION_NOT_FOUND',
@@ -7,6 +8,7 @@ export const ERROR_CODES = {
   INVALID_TITLE: 'INVALID_TITLE',
   TITLE_LENGTH: 'TITLE_LENGTH',
   SERVER_ERROR: 'SERVER_ERROR',
+  INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
   INVALID_PASSWORD: 'INVALID_PASSWORD',
   PASSWORD_MISMATCH: 'PASSWORD_MISMATCH',
   USER_NOT_FOUND: 'USER_NOT_FOUND',
@@ -56,6 +58,14 @@ export const ERROR_MESSAGES: Record<string, Record<'en' | 'fr', string>> = {
   [ERROR_CODES.USER_NOT_FOUND]: {
     en: 'User not found',
     fr: 'Utilisateur introuvable',
+  },
+  [ERROR_CODES.FORBIDDEN]: {
+    en: 'Access denied',
+    fr: 'Accès refusé',
+  },
+  [ERROR_CODES.INTERNAL_SERVER_ERROR]: {
+    en: 'Internal server error',
+    fr: 'Erreur serveur interne',
   },
 } as const
 

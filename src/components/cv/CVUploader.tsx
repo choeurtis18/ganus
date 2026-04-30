@@ -4,6 +4,7 @@ import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
+import { useToast } from '@/components/ui/toast'
 import type { CvAnalysis } from '@/lib/llm-cv'
 
 interface CVUploaderProps {
@@ -13,17 +14,16 @@ interface CVUploaderProps {
 
 export default function CVUploader({ hasExisting, onAnalyzed }: CVUploaderProps) {
   const t = useTranslations('cv')
+  const toast = useToast()
   const inputRef = useRef<HTMLInputElement>(null)
   const [dragging, setDragging] = useState(false)
   const [uploading, setUploading] = useState(false)
-  const [error, setError] = useState('')
 
   const ACCEPTED = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp']
 
   const upload = async (file: File) => {
-    setError('')
-    if (!ACCEPTED.includes(file.type)) { setError(t('errors.invalidType')); return }
-    if (file.size > 5 * 1024 * 1024) { setError(t('errors.tooLarge')); return }
+    if (!ACCEPTED.includes(file.type)) { toast(t('errors.invalidType'), 'error'); return }
+    if (file.size > 5 * 1024 * 1024) { toast(t('errors.tooLarge'), 'error'); return }
 
     setUploading(true)
     try {
@@ -32,12 +32,13 @@ export default function CVUploader({ hasExisting, onAnalyzed }: CVUploaderProps)
       const res = await fetch('/api/profile/cv', { method: 'POST', body: form })
       const body = await res.json()
       if (!res.ok) {
-        if (res.status === 429) { setError(t('rateLimit.message')); return }
+        if (res.status === 429) { toast(t('rateLimit.message'), 'info'); return }
         throw new Error(body.error || t('errors.uploadFailed'))
       }
       onAnalyzed(body.data.analysis as CvAnalysis)
+      toast(t('upload.success'), 'success')
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('errors.analysisFailed'))
+      toast(err instanceof Error ? err.message : t('errors.analysisFailed'), 'error')
     } finally {
       setUploading(false)
     }
@@ -47,8 +48,6 @@ export default function CVUploader({ hasExisting, onAnalyzed }: CVUploaderProps)
 
   return (
     <div className="flex flex-col gap-3">
-      {error && <div className="p-3 bg-red-600/10 text-red-600 rounded-lg text-sm">{error}</div>}
-
       <div
         className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer ${
           dragging ? 'border-gold bg-gold/5' : 'border-border hover:border-gold/50'

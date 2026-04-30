@@ -1,100 +1,96 @@
-# ganus.fr — Interview Prep Platform
+# Ganus — AI Interview Prep Platform
 
-AI-powered interview prep for French students (internship/apprentice/CDI seekers).
+Plateforme IA de préparation aux entretiens pour étudiants français (stage, alternance, CDI). Freemium.
 
-**Stack**: Next.js 14 (App Router) • TypeScript • Supabase • OpenAI • Stripe
+**Stack**: Next.js 16.2.4 (App Router, Turbopack) · TypeScript · Supabase (Auth + Storage + PostgreSQL) · Prisma · OpenAI · next-intl · Tailwind CSS
 
 ## Quick Start
 
-### Prerequisites
+### Prérequis
 - Node.js 20+
-- Supabase project (create at supabase.com)
-- OpenAI API key
+- Projet Supabase (supabase.com)
+- Clé API OpenAI
 
 ### Setup
 
-1. **Clone & install**
-   ```bash
-   npm install
-   ```
+```bash
+# 1. Install
+npm install
 
-2. **Configure environment**
-   ```bash
-   cp .env.example .env.local
-   # Fill in Supabase URL, OpenAI key, etc.
-   ```
+# 2. Configure
+cp .env.example .env.local
+# Remplir les variables (voir .env.example)
 
-3. **Setup database**
-   ```bash
-   npx prisma migrate dev --name init
-   ```
+# 3. Database
+npm run migrate
 
-4. **Run dev server**
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000)
+# 4. Supabase Storage
+# Créer un bucket privé nommé 'cvs' dans le dashboard Supabase
 
-## Project Structure
+# 5. Dev server
+npm run dev
+```
 
-- **[.claude/](/.claude/)** — Claude Code hub (STATUS, RULES, MEMORY, PLANS)
-- **[src/](src/)** — Application code (pages, components, utilities)
-- **[prisma/](prisma/)** — Database schema & migrations
-- **[__tests__/](__tests__/)** — Unit, integration, E2E tests
-- **[docs/](docs/)** — Project documentation
+Ouvrir [http://localhost:3000](http://localhost:3000)
 
-👉 **Start with** [.claude/README.md](./.claude/README.md) to understand project info.
-
-## Commands
+## Commandes
 
 ```bash
-npm run dev              # Start dev server
-npm run build            # Production build
-npm test                 # Run Jest tests
-npm run test:e2e         # Run Playwright tests
-npx tsc --noEmit         # Check TypeScript
-npm run migrate          # Prisma migrations
+npm run dev          # Serveur dev (Turbopack)
+npm run build        # Build production
+npm test             # Tests Jest
+npx tsc --noEmit     # Vérification TypeScript
+npm run migrate      # prisma db push
 ```
+
+## Fonctionnalités
+
+| Feature | Description |
+|---------|-------------|
+| Auth | Email/password via Supabase |
+| Chat IA | Simulations d'entretien avec feedback scoring |
+| Profil | Données personnelles + profil pro + postes cibles |
+| CV Analysis | Upload PDF → extraction texte → analyse LLM |
+| Dashboard | Stats progression, scores, conseils personnalisés |
+| Landing | Page publique marketing |
+| Admin | Users, stats, logs, stockage |
+| i18n | FR / EN via next-intl |
 
 ## Architecture
 
-**Key Patterns** (see [.claude/CLAUDE.md](./.claude/CLAUDE.md)):
-- API routes: parse → auth → rate-limit → business logic → track costs
-- LLM strategy: gpt-4o-mini (cheap) + gpt-4o (quality)
-- Hybrid chat: simple flow (< 10 msgs) + summarized flow (≥ 10 msgs)
-- Encryption: AES-256-CBC field-level for sensitive data
+```
+src/
+  app/
+    [locale]/          ← Pages (FR/EN)
+      (protected)/     ← Routes authentifiées
+        chat/          ← Interface chat
+        dashboard/     ← Dashboard utilisateur
+        profile/       ← Profil + CV
+      admin/           ← Back-office
+    api/               ← API routes
+  components/          ← Composants UI
+  lib/                 ← Helpers (db, llm, llm-cv, api-response...)
+  i18n/                ← Config next-intl
+prisma/                ← Schema DB
+messages/              ← Traductions FR/EN
+```
 
-## MVP Roadmap (Option A)
+**Patterns clés** — voir [.claude/CLAUDE.md](./.claude/CLAUDE.md) :
+- API routes : auth → rate-limit → logique → successResponse
+- LLM : gpt-4o-mini (chat/scoring/CV) + gpt-4o (génération longue)
+- Stream protocol : `[FEEDBACK]{json}[/FEEDBACK]<question>`
+- Soft delete uniquement (RGPD)
 
-**Sprint 1: Foundation (Setup + Auth)**
-- Phase 1.1: Supabase + Prisma setup
-- Phase 1.2: NextAuth + User model
-- Phase 1.3: Chat core + UI foundation
+## Déploiement Vercel
 
-**Sprint 2: LLM Integration**
-- OpenAI integration
-- Streaming responses
-- Cost tracking
+1. Connecter le repo GitHub à Vercel
+2. Configurer les variables d'environnement (voir `.env.example`)
+3. Le CI/CD GitHub Actions valide les PR (`.github/workflows/ci.yml`)
 
-**Sprint 3: Polish**
-- Error handling
-- Rate limiting
-- E2E tests
-- Beta-ready
+## CI/CD
 
-**Phase 2** (After MVP validation)
-- CV Analysis (5 LLM calls)
-- Job Analysis (5 LLM calls)
-- Subscription system + Stripe
-
-**Current**: MVP Sprint 1 Phase 1.1 (Just starting)
-
-## Important Links
-
-- 📖 [CLAUDE.md](./.claude/CLAUDE.md) — Project instructions & architecture
-- 🧠 [Memory Index](./.claude/memory/MEMORY.md) — Technical decisions & context
-- 🎯 [MVP Plan](./.claude/plans/mvp-sprint-1.md) — Sprint 1 breakdown
+GitHub Actions sur chaque PR : `npx tsc --noEmit` + `npm run lint` + `npm test`
 
 ---
 
-**Built with ❤️ for interview prep**
+**Built for French students preparing their next interview**

@@ -74,10 +74,24 @@
     "improvements": "To improve",
     "selectOrCreate": "Select or create a conversation…",
     "shortcutHint": "Shift+Enter to send · Enter for new line",
+    "chatReport": {
+      "title": "Session Report",
+      "generate": "Generate report",
+      "generating": "Analyzing...",
+      "regenerate": "Regenerate analysis",
+      "analyzing": "Analysis in progress...",
+      "noAnalysis": "No analysis yet. Click below to generate one.",
+      "averageScore": "Discussion average",
+      "strengths": "Strengths",
+      "improvements": "To improve",
+      "suggestions": "Suggestions"
+    },
+    "reportGenerated": "Report generated successfully",
     "errors": {
       "failedToLoad": "Failed to load conversation",
       "failedToSend": "Failed to send message",
-      "rateLimited": "Too many messages. Please try again later."
+      "rateLimited": "Too many messages. Please try again later.",
+      "analysisFailed": "Failed to generate analysis"
     }
   },
   "landing": {
@@ -131,21 +145,29 @@
       "avgScore": "Average score",
       "cvScore": "CV score",
       "noCv": "CV not analyzed",
-      "sessions": "Sessions"
+      "sessions": "Sessions",
+      "thisMonth": "this month"
     },
     "scoreChart": {
       "title": "Score progression",
       "noData": "No data yet. Start an interview session to begin.",
-      "week": "Wk"
+      "week": "Wk",
+      "chatLine": "Interview scores",
+      "cvLine": "CV score"
     },
     "improvements": {
       "title": "Areas to improve",
       "empty": "Keep practicing to get personalized recommendations."
     },
     "tips": {
-      "title": "Personalized tips",
+      "title": "Personalized tips for your CV",
       "empty": "Upload your CV to receive advice tailored to your profile.",
       "uploadCv": "Analyze my CV"
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "simulate": "Simulate an interview",
+      "analyzeCV": "Analyze my CV"
     },
     "recentChats": {
       "title": "Recent sessions",
@@ -157,6 +179,7 @@
   },
   "cv": {
     "title": "My CV",
+    "description": "Analyze your CV to get personalized advice",
     "upload": {
       "label": "Upload my CV",
       "hint": "PDF, JPG, PNG · Max 5 MB",
@@ -182,7 +205,8 @@
       "invalidType": "Invalid format — PDF, JPG or PNG only",
       "uploadFailed": "Upload failed",
       "analysisFailed": "Analysis failed"
-    }
+    },
+    "seeFullAnalysis": "See full analysis on my profile"
   },
   "profile": {
     "title": "Profile",
@@ -243,6 +267,13 @@
       "loadProfile": "Error loading profile",
       "saveFailed": "Failed to save profile",
       "invalidAge": "Age must be between 18 and 99"
+    },
+    "cv": {
+      "title": "My CV",
+      "download": "Download",
+      "lastAnalysis": "Last analysis:",
+      "score": "Global score",
+      "seeAnalysis": "See full analysis"
     }
   },
   "layout": {
@@ -306,6 +337,9 @@
     "calls": "calls",
     "recentLogs": "Recent logs",
     "noLogs": "No logs",
+    "themeLight": "Light mode",
+    "themeDark": "Dark mode",
+    "backToApp": "Back to app",
     "tabs": {
       "stats": "Statistics",
       "users": "Users",

@@ -36,14 +36,35 @@ export interface LLMCallResult {
   model: LLMModel
 }
 
-const SYSTEM_PROMPT = `Tu es Ganus, un coach IA spécialisé dans la préparation aux entretiens professionnels pour les françophones.
+export interface UserContext {
+  prenom?: string | null
+  domaine?: string | null
+  sousDomaine?: string | null
+  niveau?: string | null
+  postesRecherches?: string[] | null
+  cvStrengths?: string[] | null
+}
+
+const BASE_SYSTEM_PROMPT = `Tu es Ganus, un coach IA spécialisé dans la préparation aux entretiens professionnels pour les françophones.
 Tu mènes un entretien simulé : pose des questions réalistes de recruteur, une à la fois.
 RÈGLES IMPORTANTES :
 - Si la réponse du candidat ne correspond pas à la question posée (hors sujet, réponse évasive, réponse qui parle d'autre chose), signale-le clairement et redemande-lui de répondre à la question initiale.
 - Si la réponse est trop courte ou vague mais sur le bon sujet, redemande-lui de développer ou de donner un exemple concret.
 - Ne donne PAS de feedback structuré écrit (pas de "Points forts :", "À améliorer :") : ce feedback est géré automatiquement par le système.
-Réponds toujours en français. Sois direct, naturel, comme un vrai recruteur.
-`
+Réponds toujours en français. Sois direct, naturel, comme un vrai recruteur.`
+
+function buildSystemPrompt(userContext?: UserContext): string {
+  if (!userContext) return BASE_SYSTEM_PROMPT
+  const lines = [
+    userContext.prenom ? `Candidat : ${userContext.prenom}` : null,
+    userContext.domaine ? `Domaine : ${userContext.domaine}${userContext.sousDomaine ? ` / ${userContext.sousDomaine}` : ''}` : null,
+    userContext.niveau ? `Niveau : ${userContext.niveau}` : null,
+    userContext.postesRecherches?.length ? `Postes cibles : ${userContext.postesRecherches.join(', ')}` : null,
+    userContext.cvStrengths?.length ? `Points forts CV : ${userContext.cvStrengths.join(', ')}` : null,
+  ].filter(Boolean)
+  if (lines.length === 0) return BASE_SYSTEM_PROMPT
+  return `${BASE_SYSTEM_PROMPT}\n\nContexte du candidat :\n${lines.join('\n')}\nAdapte tes questions à ce profil.`
+}
 
 const NEXT_QUESTION_SYSTEM_PROMPT = `Tu es Ganus, un coach IA spécialisé dans la préparation aux entretiens professionnels pour les françophones.
 Tu viens d'évaluer la réponse du candidat et le feedback structuré a déjà été affiché séparément.
@@ -108,8 +129,9 @@ async function summarizeHistory(messages: ChatMessage[]): Promise<{ summary: str
 async function buildMessages(
   history: ChatMessage[],
   newMessage: string,
+  userContext?: UserContext,
 ): Promise<{ messages: ChatCompletionMessageParam[]; needsSummary: boolean; summaryResult?: { summary: string } & LLMCallResult }> {
-  const systemMessage: ChatCompletionMessageParam = { role: 'system', content: SYSTEM_PROMPT }
+  const systemMessage: ChatCompletionMessageParam = { role: 'system', content: buildSystemPrompt(userContext) }
 
   if (history.length < SUMMARY_THRESHOLD) {
     const messages: ChatCompletionMessageParam[] = [
@@ -140,6 +162,7 @@ function buildNextQuestionMessages(
   history: ChatMessage[],
   userMessage: string,
   feedback: FeedbackData,
+  userContext?: UserContext,
 ): ChatCompletionMessageParam[] {
   const recentHistory = history.length > RECENT_MESSAGES_COUNT
     ? history.slice(-RECENT_MESSAGES_COUNT)
@@ -147,8 +170,15 @@ function buildNextQuestionMessages(
 
   const feedbackContext = `Le feedback structuré sur la dernière réponse du candidat a déjà été envoyé séparément (score: ${feedback.score}/100). NE répète PAS le feedback dans ta réponse. Pose UNIQUEMENT une nouvelle question d'entretien pertinente, courte et directe, en tenant compte des axes d'amélioration : ${feedback.improvements.join(', ') || 'aucun'}. Pas de préambule, pas de récapitulatif du feedback.`
 
+  const contextLines = userContext
+    ? [
+        userContext.postesRecherches?.length ? `Postes cibles : ${userContext.postesRecherches.join(', ')}` : null,
+        userContext.niveau ? `Niveau : ${userContext.niveau}` : null,
+      ].filter(Boolean).join('\n')
+    : ''
+
   return [
-    { role: 'system', content: NEXT_QUESTION_SYSTEM_PROMPT },
+    { role: 'system', content: contextLines ? `${NEXT_QUESTION_SYSTEM_PROMPT}\n${contextLines}` : NEXT_QUESTION_SYSTEM_PROMPT },
     ...recentHistory.map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content })),
     { role: 'user', content: userMessage },
     { role: 'system', content: feedbackContext },
@@ -279,8 +309,9 @@ export async function streamChatResponse(
   history: ChatMessage[],
   newMessage: string,
   onComplete: (result: { fullResponse: string; llmCalls: LLMCallResult[]; feedback?: FeedbackData }) => void,
+  userContext?: UserContext,
 ): Promise<ReadableStream<Uint8Array>> {
-  const { messages, needsSummary, summaryResult } = await buildMessages(history, newMessage)
+  const { messages, needsSummary, summaryResult } = await buildMessages(history, newMessage, userContext)
   const model: LLMModel = needsSummary ? 'gpt-4o' : 'gpt-4o-mini'
   const llmCalls: LLMCallResult[] = []
 
@@ -336,6 +367,7 @@ export async function streamStructuredResponse(
   history: ChatMessage[],
   newMessage: string,
   onComplete: (result: { fullResponse: string; llmCalls: LLMCallResult[]; feedback?: FeedbackData }) => void,
+  userContext?: UserContext,
 ): Promise<ReadableStream<Uint8Array>> {
   const llmCalls: LLMCallResult[] = []
 
@@ -344,7 +376,7 @@ export async function streamStructuredResponse(
   llmCalls.push(...evalCalls)
 
   // Call 2: stream next question with feedback context
-  const messages = buildNextQuestionMessages(history, newMessage, feedback)
+  const messages = buildNextQuestionMessages(history, newMessage, feedback, userContext)
   const model: LLMModel = 'gpt-4o-mini'
 
   const stream = await openai.chat.completions.create({
@@ -386,6 +418,75 @@ export async function streamStructuredResponse(
       }
     },
   })
+}
+
+// Generate comprehensive chat session analysis
+export interface ChatAnalysisResult {
+  summary: string
+  feedback?: object
+  strengths: string[]
+  improvements: string[]
+  suggestions: string[]
+}
+
+const CHAT_ANALYSIS_PROMPT = `Tu es un coach d'entretien professionnel qui analyse une session d'entraînement complète.
+Tu reçois l'historique complet d'une session d'interview (questions et réponses).
+Génère une analyse globale de la performance du candidat.
+Réponds UNIQUEMENT en JSON valide, sans texte supplémentaire :
+{
+  "summary": "<3-4 phrases résumant la performance globale, le profil du candidat et les points clés>",
+  "strengths": ["<point fort 1>", "<point fort 2>", "<point fort 3>"],
+  "improvements": ["<point à améliorer 1>", "<point à améliorer 2>", "<point à améliorer 3>"],
+  "suggestions": ["<suggestion 1>", "<suggestion 2>", "<suggestion 3>"]
+}
+Sois constructif, honnête et basé sur les réponses fournies. En français.`
+
+export async function generateChatAnalysis(
+  messages: ChatMessage[],
+  sessionTitle: string,
+): Promise<ChatAnalysisResult & { llmCall: LLMCallResult }> {
+  const model: LLMModel = 'gpt-4o-mini'
+
+  // Build conversation text
+  const conversationText = messages
+    .map((m) => `${m.role === 'user' ? 'Candidat' : 'Coach'}: ${m.content}`)
+    .join('\n')
+
+  const response = await openai.chat.completions.create({
+    model,
+    messages: [
+      { role: 'system', content: CHAT_ANALYSIS_PROMPT },
+      { role: 'user', content: `Session: "${sessionTitle}"\n\nHistorique de la session:\n${conversationText}` },
+    ],
+    response_format: { type: 'json_object' },
+    max_tokens: 800,
+  })
+
+  const inputTokens = response.usage?.prompt_tokens ?? 0
+  const outputTokens = response.usage?.completion_tokens ?? 0
+
+  let result: ChatAnalysisResult = {
+    summary: '',
+    strengths: [],
+    improvements: [],
+    suggestions: [],
+  }
+
+  try {
+    const parsed = JSON.parse(response.choices[0].message.content ?? '{}')
+    result = {
+      summary: String(parsed.summary || ''),
+      feedback: parsed.feedback,
+      strengths: Array.isArray(parsed.strengths) ? parsed.strengths.map(String).filter(Boolean) : [],
+      improvements: Array.isArray(parsed.improvements) ? parsed.improvements.map(String).filter(Boolean) : [],
+      suggestions: Array.isArray(parsed.suggestions) ? parsed.suggestions.map(String).filter(Boolean) : [],
+    }
+  } catch { /* keep defaults */ }
+
+  return {
+    ...result,
+    llmCall: { model, inputTokens, outputTokens, costUSD: calculateCost(model, inputTokens, outputTokens) },
+  }
 }
 
 // Save all LLM calls to LLMLog

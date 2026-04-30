@@ -29,7 +29,7 @@ describe('Rate Limiting', () => {
       mockPrismaCount.mockResolvedValue(5)
       process.env.RATE_LIMIT_MESSAGES_PER_HOUR = '20'
 
-      const result = await checkRateLimit(userId)
+      const result = await checkRateLimit(userId, 'chat_turn')
 
       expect(result.allowed).toBe(true)
       expect(result.remaining).toBe(15)
@@ -39,7 +39,7 @@ describe('Rate Limiting', () => {
       mockPrismaCount.mockResolvedValue(20)
       process.env.RATE_LIMIT_MESSAGES_PER_HOUR = '20'
 
-      const result = await checkRateLimit(userId)
+      const result = await checkRateLimit(userId, 'chat_turn')
 
       expect(result.allowed).toBe(false)
       expect(result.remaining).toBe(0)
@@ -49,7 +49,7 @@ describe('Rate Limiting', () => {
       mockPrismaCount.mockResolvedValue(25)
       process.env.RATE_LIMIT_MESSAGES_PER_HOUR = '20'
 
-      const result = await checkRateLimit(userId)
+      const result = await checkRateLimit(userId, 'chat_turn')
 
       expect(result.allowed).toBe(false)
       expect(result.remaining).toBe(0)
@@ -59,7 +59,7 @@ describe('Rate Limiting', () => {
       mockPrismaCount.mockResolvedValue(4)
       process.env.RATE_LIMIT_MESSAGES_PER_HOUR = '5'
 
-      const result = await checkRateLimit(userId)
+      const result = await checkRateLimit(userId, 'chat_turn')
 
       expect(result.allowed).toBe(true)
       expect(result.remaining).toBe(1)
@@ -69,7 +69,7 @@ describe('Rate Limiting', () => {
       mockPrismaCount.mockResolvedValue(10)
       process.env.RATE_LIMIT_MESSAGES_PER_HOUR = 'invalid'
 
-      const result = await checkRateLimit(userId)
+      const result = await checkRateLimit(userId, 'chat_turn')
 
       expect(result.allowed).toBe(true)
       expect(result.remaining).toBe(10)
@@ -79,7 +79,7 @@ describe('Rate Limiting', () => {
       mockPrismaCount.mockRejectedValue(new Error('DB error'))
       process.env.RATE_LIMIT_MESSAGES_PER_HOUR = '20'
 
-      const result = await checkRateLimit(userId)
+      const result = await checkRateLimit(userId, 'chat_turn')
 
       expect(result.allowed).toBe(true)
       expect(result.remaining).toBe(20)
@@ -89,7 +89,9 @@ describe('Rate Limiting', () => {
       mockPrismaCount.mockResolvedValue(0)
       process.env.RATE_LIMIT_MESSAGES_PER_HOUR = '20'
 
-      await checkRateLimit(userId)
+      const beforeCall = new Date()
+      await checkRateLimit(userId, 'chat_turn')
+      const afterCall = new Date()
 
       expect(mockPrismaCount).toHaveBeenCalledWith({
         where: {
@@ -104,23 +106,29 @@ describe('Rate Limiting', () => {
       const callArgs = mockPrismaCount.mock.calls[0]?.[0]
       if (!callArgs) throw new Error('No calls to mockPrismaCount')
       const gteDate = (callArgs.where as any).createdAt.gte
-      const hourAgo = new Date(Date.now() - 3600000)
 
-      expect(gteDate.getTime()).toBeGreaterThanOrEqual(hourAgo.getTime() - 1000)
-      expect(gteDate.getTime()).toBeLessThanOrEqual(hourAgo.getTime() + 1000)
+      // The gte date should be approximately 1 hour before the call
+      const expectedMin = new Date(beforeCall.getTime() - 3600000)
+      const expectedMax = new Date(afterCall.getTime() - 3600000)
+
+      expect(gteDate.getTime()).toBeGreaterThanOrEqual(expectedMin.getTime() - 1000)
+      expect(gteDate.getTime()).toBeLessThanOrEqual(expectedMax.getTime() + 1000)
     })
   })
 
   describe('getRateLimitHeaders', () => {
     it('should return correct header format', () => {
-      const headers = getRateLimitHeaders(15)
+      const result = { allowed: true, remaining: 15, resetInSeconds: 3600 }
+      const headers = getRateLimitHeaders(result)
 
       expect(headers['X-RateLimit-Remaining']).toBe('15')
-      expect(headers['X-RateLimit-Limit']).toBeDefined()
+      expect(headers['X-RateLimit-Limit']).toBe('15')
+      expect(headers['X-RateLimit-Reset']).toBeDefined()
     })
 
     it('should handle zero remaining', () => {
-      const headers = getRateLimitHeaders(0)
+      const result = { allowed: false, remaining: 0, resetInSeconds: 3600 }
+      const headers = getRateLimitHeaders(result)
 
       expect(headers['X-RateLimit-Remaining']).toBe('0')
     })

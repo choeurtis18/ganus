@@ -10,10 +10,10 @@ import { useTranslations } from 'next-intl'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
 const NAV = [
-  { id: 'home',    icon: 'home',    href: '/home',    disabled: true },
+  { id: 'home',    icon: 'home',    href: '/dashboard', disabled: false },
   { id: 'chat',    icon: 'chat',    href: '/chat',    disabled: false },
-  { id: 'history', icon: 'history', href: '/history', disabled: true },
-  { id: 'cv',      icon: 'file',    href: '/cv',      disabled: true },
+  { id: 'cv',      icon: 'file',    href: '/cv',      disabled: false },
+  { id: 'profile', icon: 'user',    href: '/profile',  disabled: false },
 ]
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -27,7 +27,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const t        = useTranslations('layout')
 
   useEffect(() => {
-    const stored = localStorage.getItem('genus_dark')
+    const stored = localStorage.getItem('ganus_dark')
     const dark = stored ? JSON.parse(stored) : false
     setIsDark(dark)
     document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
@@ -53,7 +53,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const toggleDark = () => {
     const next = !isDark
     setIsDark(next)
-    localStorage.setItem('genus_dark', JSON.stringify(next))
+    localStorage.setItem('ganus_dark', JSON.stringify(next))
     document.documentElement.setAttribute('data-theme', next ? 'dark' : 'light')
   }
 

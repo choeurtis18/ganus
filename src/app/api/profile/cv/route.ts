@@ -50,6 +50,35 @@ async function extractTextWithOcr(buffer: Buffer): Promise<string> {
   }
 }
 
+export async function GET(_request: NextRequest) {
+  const requestId = generateRequestId()
+  try {
+    const supabase = await createClient()
+    const { data: { user: authUser } } = await supabase.auth.getUser()
+    if (!authUser) return errorResponse(getErrorMessage(ERROR_CODES.UNAUTHORIZED), requestId, 401)
+
+    const user = await prisma.user.findUnique({
+      where: { supabaseId: authUser.id },
+      select: { cvUrl: true },
+    })
+    if (!user?.cvUrl) return errorResponse('Aucun CV enregistré', requestId, 404)
+
+    const { data, error } = await adminStorage.storage
+      .from('cvs')
+      .createSignedUrl(user.cvUrl, 60) // 60s expiry
+
+    if (error || !data?.signedUrl) {
+      console.error('[profile/cv GET] signed url', error?.message)
+      return errorResponse('Erreur génération lien', requestId, 500)
+    }
+
+    return successResponse({ url: data.signedUrl }, requestId)
+  } catch (error) {
+    console.error('[profile/cv GET]', error instanceof Error ? error.message : 'unknown')
+    return errorResponse(getErrorMessage(ERROR_CODES.SERVER_ERROR), requestId, 500)
+  }
+}
+
 export async function POST(request: NextRequest) {
   const requestId = generateRequestId()
 
@@ -60,7 +89,7 @@ export async function POST(request: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { supabaseId: authUser.id },
-      select: { id: true, cvAnalysisCount: true, cvAnalysisAt: true, postesRecherches: true },
+      select: { id: true, cvAnalysisCount: true, cvAnalysisAt: true, postesRecherches: true, domaine: true, niveau: true },
     })
     if (!user) return errorResponse(getErrorMessage(ERROR_CODES.USER_NOT_FOUND), requestId, 404)
 
@@ -101,7 +130,7 @@ export async function POST(request: NextRequest) {
     if (isImage) {
       // Image → GPT-4-Vision
       const base64 = buffer.toString('base64')
-      analysis = await analyzeCvFromImage(base64, file.type as SupportedMimeType, postes, user.id)
+      analysis = await analyzeCvFromImage(base64, file.type as SupportedMimeType, postes, user.id, user.domaine, user.niveau)
     } else {
       // PDF → try text extraction
       try {
@@ -122,20 +151,35 @@ export async function POST(request: NextRequest) {
         return errorResponse('PDF trop court — au minimum 50 caractères requis', requestId, 400)
       }
 
-      analysis = await analyzeCv(cvText, postes, user.id)
+      analysis = await analyzeCv(cvText, postes, user.id, user.domaine, user.niveau)
     }
 
-    // Save to DB
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        cvUrl: storagePath,
-        cvText: cvText || null,
-        cvAnalysis: analysis as unknown as import('@prisma/client').Prisma.InputJsonValue,
-        cvAnalysisAt: now,
-        cvAnalysisCount: analysisAge > 24 * 60 * 60 * 1000 ? 1 : count + 1,
-      },
-    })
+    // Save to DB in transaction
+    await prisma.$transaction([
+      // Update User with latest analysis
+      prisma.user.update({
+        where: { id: user.id },
+        data: {
+          cvUrl: storagePath,
+          cvText: cvText || null,
+          cvAnalysis: analysis as unknown as import('@prisma/client').Prisma.InputJsonValue,
+          cvAnalysisAt: now,
+          cvAnalysisCount: analysisAge > 24 * 60 * 60 * 1000 ? 1 : count + 1,
+        },
+      }),
+      // Create CVAnalysis record for history
+      prisma.cVAnalysis.create({
+        data: {
+          userId: user.id,
+          cvUrl: storagePath,
+          cvText: cvText || null,
+          score: analysis.score,
+          strengths: analysis.strengths || [],
+          improvements: analysis.improvements || [],
+          suggestions: analysis.suggestions || [],
+        },
+      }),
+    ])
 
     return successResponse({ analysis }, requestId)
   } catch (error) {

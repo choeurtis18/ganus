@@ -17,12 +17,40 @@ model User {
   email     String   @unique
   supabaseId String  @unique  // Supabase Auth UID
 
-  // Profile data (can be encrypted: name, preferences, etc)
+  // Profile data
   profile   Json?
+  role      String @default("user")  // 'user' | 'admin'
+
+  // Personal info
+  nom       String?
+  prenom    String?
+  age       Int?
+
+  // Professional profile
+  domaine          String?   // 'developpement' | 'data' | 'design' | 'marketing' | 'finance' | 'product' | 'autre'
+  sousDomaine      String?
+  niveau           String?   // 'junior' | 'confirme' | 'senior' | 'expert'
+  postesRecherches Json?     // string[]
+  profileCompletedAt DateTime?
+
+  // CV Analysis (keep for latest analysis)
+  cvUrl            String?   // Supabase Storage path
+  cvText           String?   // Extracted text from PDF
+  cvAnalysis       Json?     // { score: 0-100, strengths[], improvements[], suggestions[] }
+  cvAnalysisAt     DateTime?
+  cvAnalysisCount  Int @default(0)  // rate limit: max 2/day
+
+  // Chat Reports
+  chatReportCount  Int @default(0)  // rate limit: max 4/day
 
   // Relations
   chatSessions ChatSession[]
+  chatReports  ChatReport[]
+  cvAnalyses   CVAnalysis[]
   llmLogs      LLMLog[]
+
+  // Admin controls
+  suspendedAt DateTime?
 
   // RGPD: soft delete support
   createdAt DateTime @default(now())
@@ -57,12 +85,63 @@ model ChatSession {
   updatedAt DateTime @updatedAt
   deletedAt DateTime?
 
-  // Relation to score breakdowns
+  // Relations
   scoreBreakdowns ScoreBreakdown[]
+  chatReports ChatReport[]
 
   @@index([userId])
   @@index([createdAt])
   @@index([deletedAt])
+}
+
+model ChatReport {
+  id          String   @id @default(cuid())
+  userId      String
+  sessionId   String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session     ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  // Report content
+  summary     String?          // Narrative summary of the session
+  feedback    Json?            // Array of feedback points
+  strengths   Json @default("[]")    // string[]
+  improvements Json @default("[]")   // string[]
+  suggestions Json @default("[]")    // string[]
+
+  // Session metrics at analysis time
+  messageCount Int @default(0)  // Number of user messages at analysis time
+  averageScore Float?           // Average score of the session
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  @@unique([sessionId, createdAt])
+  @@index([userId])
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+model CVAnalysis {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // CV metadata
+  cvUrl       String?        // Supabase Storage path
+  cvText      String?        // Extracted text from PDF
+
+  // Analysis results
+  score       Int            // 0-100
+  strengths   Json @default("[]")    // string[]
+  improvements Json @default("[]")   // string[]
+  suggestions Json @default("[]")    // string[]
+
+  createdAt   DateTime @default(now())
+
+  // Relations
+  @@index([userId])
+  @@index([createdAt])
 }
 
 model ScoreBreakdown {
