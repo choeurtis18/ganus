@@ -22,6 +22,7 @@ export async function GET(_request: NextRequest) {
     const user = await prisma.user.findUnique({
       where: { supabaseId: authUser.id },
       select: {
+        id: true,
         email: true,
         role: true,
         createdAt: true,
@@ -45,7 +46,7 @@ export async function GET(_request: NextRequest) {
     }
 
     const chatCount = await prisma.chatSession.count({
-      where: { userId: authUser.id, deletedAt: null },
+      where: { userId: user.id, deletedAt: null },
     })
 
     return successResponse({ ...user, chatCount }, requestId)

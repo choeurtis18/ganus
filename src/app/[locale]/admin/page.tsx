@@ -55,7 +55,12 @@ export default function AdminPage() {
 
   useEffect(() => {
     const stored = localStorage.getItem('ganus_dark')
-    const dark = stored ? JSON.parse(stored) : false
+    let dark = false
+    try {
+      dark = stored ? JSON.parse(stored) : false
+    } catch {
+      dark = false
+    }
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsDark(dark)
     document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
@@ -92,6 +97,7 @@ export default function AdminPage() {
     setStorageLoading(true)
     try {
       const res = await fetch('/api/admin/storage', { headers: { 'x-admin-secret': secret } })
+      if (!res.ok) return
       const body = await res.json()
       setStorage(body.data)
     } finally { setStorageLoading(false) }

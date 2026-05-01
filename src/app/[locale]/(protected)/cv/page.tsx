@@ -21,8 +21,9 @@ export default function CVPage() {
 
   useEffect(() => {
     fetch('/api/profile')
-      .then((r) => r.json())
+      .then((r) => r.ok ? r.json() : null)
       .then((body) => {
+        if (!body?.data) return
         const d = body.data
         setHasCV(!!d.cvUrl)
         setAnalysis(d.cvAnalysis ?? null)

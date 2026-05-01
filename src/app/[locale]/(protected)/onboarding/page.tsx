@@ -62,32 +62,28 @@ export default function OnboardingPage() {
 
   // Redirect if already onboarded + pre-fill profile
   useEffect(() => {
-    fetch('/api/dashboard/stats')
-      .then((r) => r.json())
-      .then((body) => {
-        if (body.data?.onboardingCompletedAt) router.replace('/dashboard')
+    Promise.all([
+      fetch('/api/dashboard/stats').then((r) => r.ok ? r.json() : null).catch(() => null),
+      fetch('/api/profile').then((r) => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([statsBody, profileBody]) => {
+      if (statsBody?.data?.onboardingCompletedAt) router.replace('/dashboard')
+      if (!profileBody?.data) return
+      const d = profileBody.data
+      setForm({
+        prenom: d.prenom ?? '',
+        nom: d.nom ?? '',
+        age: d.age != null ? String(d.age) : '',
+        domaine: d.domaine ?? '',
+        sousDomaine: d.sousDomaine ?? '',
+        niveau: d.niveau ?? '',
+        postesRecherches: Array.isArray(d.postesRecherches) ? d.postesRecherches : [],
       })
-
-    fetch('/api/profile')
-      .then((r) => r.json())
-      .then((body) => {
-        if (!body.data) return
-        const d = body.data
-        setForm({
-          prenom: d.prenom ?? '',
-          nom: d.nom ?? '',
-          age: d.age != null ? String(d.age) : '',
-          domaine: d.domaine ?? '',
-          sousDomaine: d.sousDomaine ?? '',
-          niveau: d.niveau ?? '',
-          postesRecherches: Array.isArray(d.postesRecherches) ? d.postesRecherches : [],
-        })
-        if (d.cvAnalysis) {
-          setCvAnalyzed(true)
-          setHasExistingCv(true)
-          setCvAnalysis(d.cvAnalysis as CvAnalysis)
-        }
-      })
+      if (d.cvAnalysis) {
+        setCvAnalyzed(true)
+        setHasExistingCv(true)
+        setCvAnalysis(d.cvAnalysis as CvAnalysis)
+      }
+    }).catch(() => {})
   }, [router])
 
   const set = (key: keyof typeof form) => (val: string) => {

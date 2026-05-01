@@ -37,7 +37,12 @@ export default function LandingPage() {
 
   useEffect(() => {
     const stored = localStorage.getItem('ganus_dark')
-    const dark = stored ? JSON.parse(stored) : false
+    let dark = false
+    try {
+      dark = stored ? JSON.parse(stored) : false
+    } catch {
+      dark = false
+    }
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsDark(dark)
     document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')

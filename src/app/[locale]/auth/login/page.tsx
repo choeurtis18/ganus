@@ -36,8 +36,13 @@ export default function LoginPage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (msg) setMessage(decodeURIComponent(msg))
 
-    const stored = localStorage.getItem('ganus_dark')
-    const darkMode = stored ? JSON.parse(stored) : false
+    const stored = localStorage.getItem("ganus_dark")
+    let darkMode = false
+    try {
+      darkMode = stored ? JSON.parse(stored) : false
+    } catch {
+      darkMode = false
+    }
     setIsDark(darkMode)
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
   }, [searchParams])

@@ -15,6 +15,7 @@ export async function GET(_request: NextRequest) {
     const user = await prisma.user.findUnique({
       where: { supabaseId: authUser.id },
       select: {
+        id: true,
         email: true, createdAt: true, nom: true, prenom: true, age: true,
         domaine: true, sousDomaine: true, niveau: true, postesRecherches: true,
         profileCompletedAt: true, cvAnalysis: true, cvAnalysisAt: true,
@@ -24,7 +25,7 @@ export async function GET(_request: NextRequest) {
 
     const [sessions, llmLogs] = await Promise.all([
       prisma.chatSession.findMany({
-        where: { userId: authUser.id, deletedAt: null },
+        where: { userId: user.id, deletedAt: null },
         select: {
           id: true, title: true, createdAt: true, updatedAt: true,
           totalTurns: true, averageScore: true, messages: true,
@@ -35,7 +36,7 @@ export async function GET(_request: NextRequest) {
         orderBy: { createdAt: 'desc' },
       }),
       prisma.lLMLog.findMany({
-        where: { userId: authUser.id },
+        where: { userId: user.id },
         select: { model: true, feature: true, inputTokens: true, outputTokens: true, costUSD: true, createdAt: true },
         orderBy: { createdAt: 'desc' },
         take: 200,

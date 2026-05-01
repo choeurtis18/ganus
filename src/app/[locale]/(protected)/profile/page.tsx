@@ -52,8 +52,9 @@ export default function ProfilePage() {
 
   useEffect(() => {
     fetch('/api/profile')
-      .then((r) => r.json())
+      .then((r) => r.ok ? r.json() : null)
       .then((body) => {
+        if (!body?.data) return
         const d = body.data
         setProfile({
           email: d.email,
@@ -141,7 +142,7 @@ export default function ProfilePage() {
       const res = await fetch('/api/profile/delete', { method: 'POST' })
       if (!res.ok) { const b = await res.json(); throw new Error(b.error || t('errors.deleteFailed')) }
       await signOut()
-      setTimeout(() => router.push('/auth/login'), 500)
+      setTimeout(() => { window.location.href = "/auth/login" }, 500)
     } catch (err) {
       toast(err instanceof Error ? err.message : t('errors.deleteFailed'), 'error')
       setDeleteLoading(false)

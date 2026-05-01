@@ -30,14 +30,15 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetch('/api/dashboard/stats')
-      .then((r) => r.json())
+      .then((r) => r.ok ? r.json() : null)
       .then((body) => {
-        if (!body.data?.onboardingCompletedAt) {
+        if (!body?.data?.onboardingCompletedAt) {
           router.replace('/onboarding')
           return
         }
         setStats(body.data)
       })
+      .catch(() => router.replace('/onboarding'))
       .finally(() => setLoading(false))
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
