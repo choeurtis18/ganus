@@ -8,7 +8,7 @@ import { DOMAINES, NIVEAUX } from '@/lib/profile-data'
 const VALID_DOMAINES = Object.keys(DOMAINES)
 const VALID_NIVEAUX = NIVEAUX.map((n) => n.value)
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   const requestId = generateRequestId()
 
   try {

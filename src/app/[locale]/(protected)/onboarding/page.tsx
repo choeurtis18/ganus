@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
 import { Link } from '@/i18n/navigation'
@@ -136,7 +137,7 @@ export default function OnboardingPage() {
       {/* Header */}
       <div className="flex items-center justify-between px-6 md:px-10 py-4 border-b border-border shrink-0 bg-bg">
          <Link href="/" className="flex-shrink-0">
-         <img src="/Logo-long-Ganus.png" alt="Ganus" className="h-8" />
+         <Image src="/Logo-long-Ganus.png" alt="Ganus" width={120} height={32} className="h-8 w-auto" />
          </Link>
         <button
           onClick={() => setShowSkipModal(true)}

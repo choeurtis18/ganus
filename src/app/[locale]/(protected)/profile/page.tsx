@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import { signOut } from '@/lib/supabase-client'
 import { Card } from '@/components/ui/card'
@@ -29,7 +28,6 @@ interface ProfileData {
 }
 
 export default function ProfilePage() {
-  const router = useRouter()
   const t = useTranslations('profile')
   const toast = useToast()
   const [profile, setProfile] = useState<ProfileData | null>(null)
@@ -77,7 +75,7 @@ export default function ProfilePage() {
       })
       .catch(() => toast(t('errors.loadProfileFailed'), 'error'))
       .finally(() => setLoading(false))
-  }, [t])
+  }, [t, toast])
 
   const handleChangePassword = (e: React.FormEvent) => {
     e.preventDefault()

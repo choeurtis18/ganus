@@ -1,10 +1,9 @@
-import { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { prisma } from '@/lib/db'
 import { errorResponse, generateRequestId } from '@/lib/api-response'
 import { ERROR_CODES, getErrorMessage } from '@/lib/error-messages'
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   const requestId = generateRequestId()
 
   try {

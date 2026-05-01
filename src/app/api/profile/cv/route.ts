@@ -19,7 +19,7 @@ const ACCEPTED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/web
 type AcceptedType = typeof ACCEPTED_TYPES[number]
 
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   const requestId = generateRequestId()
   try {
     const supabase = await createClient()

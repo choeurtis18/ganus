@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 interface AvatarProps {
   name?: string
   size?: 'sm' | 'md' | 'lg'
@@ -22,10 +24,13 @@ export function Avatar({ name = '', size = 'md', src, className = '' }: AvatarPr
   const classes = `flex items-center justify-center rounded-full font-semibold text-white ${sizeClass} ${bgColorClass}${className ? ` ${className}` : ''}`
 
   if (src) {
+    const px = size === 'sm' ? 24 : size === 'lg' ? 40 : 32
     return (
-      <img
+      <Image
         src={src}
         alt={name}
+        width={px}
+        height={px}
         className={`rounded-full object-cover ${sizeClass}${className ? ` ${className}` : ''}`}
       />
     )
