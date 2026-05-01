@@ -5,7 +5,7 @@ import { routing } from './i18n/routing'
 
 const intlMiddleware = createMiddleware(routing)
 
-const protectedPaths = ['/chat', '/profile', '/admin']
+const protectedPaths = ['/chat', '/profile', '/admin', '/dashboard', '/cv', '/onboarding']
 const authPaths = ['/auth/login', '/auth/signup']
 
 export async function proxy(request: NextRequest) {
@@ -55,7 +55,7 @@ export async function proxy(request: NextRequest) {
   }
 
   if (isAuth && user) {
-    return NextResponse.redirect(new URL(`/${locale}/chat`, request.url))
+    return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url))
   }
 
   return response

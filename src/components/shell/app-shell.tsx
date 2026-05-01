@@ -61,7 +61,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const handleLogout = async () => {
     await signOut()
     setMobileOpen(false)
-    router.push('/auth/login')
+    window.location.href = '/auth/login'
   }
 
   const displayName = userEmail
@@ -80,6 +80,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Logo */}
       <div className={`flex items-center border-b border-border-color ${collapsed ? 'justify-center px-0 py-4' : 'justify-between px-5 py-4'}`}>
         {collapsed ? (
+           <Link href="/" className="flex-shrink-0">
           <Image
             src="/Logo-Ganus.png"
             alt="Ganus"
@@ -87,8 +88,10 @@ export function AppShell({ children }: { children: ReactNode }) {
             height={36}
             unoptimized
             style={{ height: '36px', width: 'auto', objectFit: 'contain' }}
-          />
+          />            
+           </Link>
         ) : (
+           <Link href="/" className="flex-shrink-0">
           <Image
             src="/Logo-long-Ganus.png"
             alt="Ganus"
@@ -96,7 +99,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             height={89}
             unoptimized
             style={{ height: '40px', width: 'auto', objectFit: 'contain' }}
-          />
+          />            
+           </Link>
+
         )}
         {withClose && (
           <button
@@ -190,6 +195,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Mobile navbar */}
       {isMobile && (
         <div className="fixed top-0 left-0 right-0 z-49 h-[60px] bg-bg-card border-b border-border-color flex items-center justify-between px-4">
+          <Link href="/" className="flex-shrink-0">
           <Image
             src="/Logo-Ganus.png"
             alt="Ganus"
@@ -197,7 +203,8 @@ export function AppShell({ children }: { children: ReactNode }) {
             width={36}
             unoptimized
             style={{ height: '36px', width: 'auto', objectFit: 'contain' }}
-          />
+          />          
+          </Link>
           <button
             onClick={() => setMobileOpen(true)}
             className="p-2 rounded-lg bg-transparent border-none cursor-pointer text-text-primary flex"

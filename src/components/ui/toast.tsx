@@ -60,7 +60,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             className={`flex items-center gap-3 px-4 py-3 rounded-xl border border-border border-l-4 bg-bg-card shadow-lg text-sm font-medium pointer-events-auto animate-in slide-in-from-right-4 duration-200 min-w-[240px] max-w-[360px] ${colors[t.type]}`}
           >
             <span className="text-base flex-shrink-0">{icons[t.type]}</span>
-            <span className="flex-1 text-text-primary">{t.message}</span>
+            <span className={`flex-1 ${colors[t.type] === "error" ? 'text-text-primary' : 'text-white'}`}>{t.message}</span>
           </div>
         ))}
       </div>

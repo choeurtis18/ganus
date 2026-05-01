@@ -131,8 +131,10 @@ export default function AdminPage() {
   const renderSidebar = (withClose = false) => (
     <div className="flex flex-col h-full bg-bg-card border-r border-border">
       <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+        <Link href="/">
         <Image src="/Logo-long-Ganus.png" alt="Ganus Admin" width={120} height={40} unoptimized
           style={{ height: '32px', width: 'auto', objectFit: 'contain' }} />
+        </Link>
         {withClose && (
           <button onClick={() => setMobileOpen(false)} className="text-text-muted p-1">
             <Icon name="x" size={18} color="currentColor" />

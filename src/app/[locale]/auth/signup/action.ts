@@ -3,10 +3,12 @@
 import { createClient } from '@/lib/supabase-server'
 import { syncUserToDB } from '@/lib/supabase-server'
 
+export type SignupErrorCode = 'email_exists' | 'signup_failed' | 'unknown'
+
 export async function signUpAction(
   email: string,
   password: string,
-): Promise<{ error?: string }> {
+): Promise<{ error?: SignupErrorCode }> {
   try {
     const supabase = await createClient()
 
@@ -20,10 +22,13 @@ export async function signUpAction(
     })
 
     if (error) {
-      return { error: error.message }
+      if (error.message.toLowerCase().includes('already registered') || error.message.toLowerCase().includes('exists')) {
+        return { error: 'email_exists' }
+      }
+      return { error: 'signup_failed' }
     }
     if (!data.user) {
-      return { error: 'Échec de l\'inscription' }
+      return { error: 'signup_failed' }
     }
 
     // Sync user to our Prisma DB
@@ -37,6 +42,6 @@ export async function signUpAction(
     return {}
   } catch (err) {
     console.error('Signup error:', err)
-    return { error: 'Une erreur est survenue' }
+    return { error: 'unknown' }
   }
 }

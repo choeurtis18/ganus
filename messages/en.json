@@ -128,7 +128,8 @@
       "step3": { "title": "Progress", "desc": "Check your dashboard to track your progress and get advice." }
     },
     "header": {
-      "login": "Sign in"
+      "login": "Sign in",
+      "myAccount": "My account"
     },
     "cta": {
       "title": "Ready to land your next role?",

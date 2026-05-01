@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from '@/i18n/navigation'
+import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Icon } from '@/components/ui/icon'
@@ -138,7 +139,9 @@ export default function OnboardingPage() {
     <div className="fixed inset-0 z-50 bg-bg flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between px-6 md:px-10 py-4 border-b border-border shrink-0 bg-bg">
-        <img src="/Logo-long-Ganus.png" alt="Ganus" className="h-8" />
+         <Link href="/" className="flex-shrink-0">
+         <img src="/Logo-long-Ganus.png" alt="Ganus" className="h-8" />
+         </Link>
         <button
           onClick={() => setShowSkipModal(true)}
           className="text-sm text-text-muted hover:text-text-primary transition-colors"

@@ -58,7 +58,12 @@ export default function SignupPage() {
     try {
       const result = await signUpAction(email, password)
       if (result.error) {
-        setError(result.error)
+        const errorMap: Record<string, string> = {
+          'email_exists': t('errors.emailExists'),
+          'signup_failed': t('errors.unknown'),
+          'unknown': t('errors.unknown'),
+        }
+        setError(errorMap[result.error] || t('errors.unknown'))
         return
       }
       router.push(`/auth/login?message=${encodeURIComponent(t('successMessage'))}`)
@@ -111,6 +116,7 @@ export default function SignupPage() {
       {/* Left Panel */}
       <div className="hidden lg:flex w-2/5 bg-gradient-to-br from-[#0f172a] via-[#1a1f3a] to-[#2d1b69] flex-col justify-center px-14 text-white">
         <div className="mb-4 mx-auto">
+          <Link href="/" className="flex-shrink-0">
           <Image
             src="/Logo-long-Ganus.png"
             alt="Ganus"
@@ -123,6 +129,7 @@ export default function SignupPage() {
               objectFit: 'contain',
             }}
           />
+          </Link>
         </div>
 
         <h1 className="font-display text-5xl font-bold mb-4 leading-tight">

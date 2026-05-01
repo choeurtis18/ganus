@@ -55,7 +55,12 @@ export default function LoginPage() {
     try {
       const result = await signInAction(email, password)
       if (result.error) {
-        setError(result.error)
+        const errorMap: Record<string, string> = {
+          'invalid_credentials': t('errors.invalidCredentials'),
+          'signin_failed': t('errors.invalidCredentials'),
+          'unknown': t('errors.unknown'),
+        }
+        setError(errorMap[result.error] || t('errors.unknown'))
         return
       }
       router.push('/dashboard')
@@ -108,6 +113,7 @@ export default function LoginPage() {
       {/* Left Panel */}
       <div className="hidden lg:flex w-2/4 bg-gradient-to-br from-[#0f172a] via-[#1a1f3a] to-[#2d1b69] flex-col gap-4 justify-center px-14 text-white">
         <div className="mb-4 mx-auto">
+          <Link href="/" className="flex-shrink-0">
           <Image
             src="/Logo-long-Ganus.png"
             alt="Ganus"
@@ -120,6 +126,7 @@ export default function LoginPage() {
               objectFit: 'contain',
             }}
           />
+        </Link>
         </div>
 
         <h1 className="font-display text-5xl font-bold mb-4 leading-tight">

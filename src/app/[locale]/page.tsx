@@ -7,6 +7,8 @@ import { useLocale, useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Icon } from '@/components/ui/icon'
+import { Avatar } from '@/components/ui/avatar'
+import { supabase } from '@/lib/supabase-client'
 
 function FeatureCard({ icon, title, desc }: { icon: string; title: string; desc: string }) {
   return (
@@ -31,6 +33,7 @@ export default function LandingPage() {
   const pathname = usePathname()
   const locale = useLocale()
   const [isDark, setIsDark] = useState(false)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
 
   useEffect(() => {
     const stored = localStorage.getItem('ganus_dark')
@@ -38,6 +41,12 @@ export default function LandingPage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsDark(dark)
     document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
+  }, [])
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user?.email) setUserEmail(user.email)
+    })
   }, [])
 
   const toggleTheme = () => {
@@ -75,7 +84,7 @@ export default function LandingPage() {
             width={120}
             height={67}
             unoptimized
-            style={{ height: '28px', width: 'auto', objectFit: 'contain' }}
+            style={{ height: '40px', width: 'auto', objectFit: 'contain' }}
           />
         </Link>
         <div className="flex items-center gap-1 sm:gap-2">
@@ -92,12 +101,23 @@ export default function LandingPage() {
           >
             {locale === 'fr' ? 'EN' : 'FR'}
           </button>
-          <Link href="/auth/login" className="hidden sm:block">
-            <Button variant="ghost" size="sm">{t('header.login')}</Button>
-          </Link>
-          <Link href="/auth/signup">
-            <Button variant="primary" size="sm">{t('hero.cta')}</Button>
-          </Link>
+          {userEmail ? (
+            <Link href="/dashboard" className="flex items-center gap-2 pl-1">
+              <Avatar name={userEmail} size="sm" />
+              <span className="hidden sm:inline text-sm font-medium text-text-primary">
+                {t('header.myAccount')}
+              </span>
+            </Link>
+          ) : (
+            <>
+              <Link href="/auth/login" className="hidden sm:block">
+                <Button variant="ghost" size="sm">{t('header.login')}</Button>
+              </Link>
+              <Link href="/auth/signup">
+                <Button variant="primary" size="sm">{t('hero.cta')}</Button>
+              </Link>
+            </>
+          )}
         </div>
       </header>
 

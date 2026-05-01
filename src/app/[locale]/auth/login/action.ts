@@ -3,10 +3,12 @@
 import { createClient } from '@/lib/supabase-server'
 import { syncUserToDB } from '@/lib/supabase-server'
 
+export type LoginErrorCode = 'invalid_credentials' | 'signin_failed' | 'unknown'
+
 export async function signInAction(
   email: string,
   password: string,
-): Promise<{ error?: string }> {
+): Promise<{ error?: LoginErrorCode }> {
   try {
     const supabase = await createClient()
 
@@ -17,10 +19,13 @@ export async function signInAction(
     })
 
     if (error) {
-      return { error: error.message }
+      if (error.message.toLowerCase().includes('invalid') || error.message.toLowerCase().includes('credentials')) {
+        return { error: 'invalid_credentials' }
+      }
+      return { error: 'signin_failed' }
     }
     if (!data.user) {
-      return { error: 'Échec de la connexion' }
+      return { error: 'signin_failed' }
     }
 
     // Sync user to DB (in case they didn't go through signup first)
@@ -33,6 +38,6 @@ export async function signInAction(
     return {}
   } catch (err) {
     console.error('Login error:', err)
-    return { error: 'Une erreur est survenue' }
+    return { error: 'unknown' }
   }
 }
