@@ -1,7 +1,25 @@
 {
   "name": "ganus",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "description": "AI-powered interview preparation platform for French students and job seekers",
+  "author": {
+    "name": "Ganus",
+    "url": "https://ganus.vercel.app"
+  },
+  "keywords": [
+    "interview",
+    "preparation",
+    "AI",
+    "French",
+    "career",
+    "interview-prep",
+    "mock-interview"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/ganus"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
