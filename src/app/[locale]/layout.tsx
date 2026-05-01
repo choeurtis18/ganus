@@ -5,12 +5,12 @@ import '../globals.css'
 import '@/styles/components.css'
 
 export const metadata: Metadata = {
-  title: 'Ganus — AI Interview Prep',
-  description: 'Master your interviews with AI-powered practice sessions. Get real-time feedback, personalized advice, and track your progress. Free interview preparation platform.',
-  keywords: ['interview', 'preparation', 'AI', 'feedback', 'interview prep', 'mock interview'],
-  authors: [{ name: 'Ganus', url: 'https://ganus.vercel.app' }],
-  creator: 'Ganus',
-  publisher: 'Ganus',
+  title: "Ganus — IA préparation d'entretiens",
+  description: "Maîtrisez vos entretiens grâce à des sessions d'entraînement basées sur l'IA. Bénéficiez de commentaires en temps réel, de conseils personnalisés et suivez vos progrès. Plateforme gratuite de préparation aux entretiens.",
+  keywords: ['interview', 'preparation', 'AI', 'feedback', 'interview prep', 'mock interview', 'interview practice', 'interview coaching', 'interview feedback', 'interview tips', 'interview questions', 'interview answers', 'interview skills', 'interview training', 'interview platform', 'free interview prep', 'Ganus', 'IA', 'préparation d\'entretiens', 'feedback en temps réel', 'conseils personnalisés', 'suivi des progrès'],
+  authors: [{ name: 'Choeurtis Tchounga', url: 'https://ganus.vercel.app' }],
+  creator: 'Choeurtis Tchounga',
+  publisher: 'Choeurtis Tchounga',
   formatDetection: {
     email: false,
     telephone: false,
@@ -22,8 +22,8 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
     url: 'https://ganus.vercel.app',
     siteName: 'Ganus',
-    title: 'Ganus — AI Interview Prep',
-    description: 'Master your interviews with AI-powered practice sessions. Get real-time feedback and personalized advice.',
+    title: 'Ganus — IA préparation d\'entretiens',
+    description: "Maîtrisez vos entretiens grâce à des sessions d'entraînement basées sur l'IA. Bénéficiez de commentaires en temps réel, de conseils personnalisés et suivez vos progrès. Plateforme gratuite de préparation aux entretiens.",
     images: [
       {
         url: '/Logo-Ganus.png',
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Ganus — AI Interview Prep',
-    description: 'Master your interviews with AI-powered practice sessions.',
+    title: 'Ganus — IA préparation d\'entretiens',
+    description: "Maîtrisez vos entretiens grâce à des sessions d'entraînement basées sur l'IA. Bénéficiez de commentaires en temps réel, de conseils personnalisés et suivez vos progrès. Plateforme gratuite de préparation aux entretiens.",
     images: ['/Logo-Ganus.png'],
   },
   icons: {
