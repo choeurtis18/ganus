@@ -91,8 +91,8 @@ export async function GET(_request: NextRequest) {
     for (const cv of cvAnalyses) {
       chartData.push({
         date: cv.createdAt.toISOString().split('T')[0],
-        score: cv.score,
-        type: 'cv',
+        score: cv.score as number,
+        type: 'cv' as const,
       })
     }
 
