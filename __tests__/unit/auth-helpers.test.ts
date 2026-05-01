@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getServerUser, getServerUserId, syncUserToDB } from '@/lib/supabase-server'
 
 // Mock Supabase
@@ -167,6 +168,7 @@ describe('Auth Helpers', () => {
         cvAnalysisAt: null,
         cvAnalysisCount: 0,
         chatReportCount: 0,
+        onboardingCompletedAt: null,
         suspendedAt: null,
         createdAt: new Date(),
         updatedAt: new Date(),

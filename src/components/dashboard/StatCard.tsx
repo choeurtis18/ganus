@@ -19,7 +19,7 @@ const colorVar: Record<string, string> = {
 
 export default function StatCard({ label, value, color = 'emerald', icon, trend }: StatCardProps) {
   return (
-    <div className="bg-bg-card border border-border rounded-xl p-5 flex flex-col gap-1.5">
+    <div className="bg-bg-card border border-border rounded-xl p-4 flex flex-col gap-1">
       <div className="flex items-start justify-between gap-2">
         <p className="text-xs text-text-secondary uppercase font-semibold tracking-wide">{label}</p>
         {icon && (

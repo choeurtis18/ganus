@@ -71,5 +71,8 @@ build/
 .claude/
 .swc/
 
+# Local dev references (SQL queries, notes)
+.dev/
+
 # IDE & local config
 .mcp.json

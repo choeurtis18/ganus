@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
@@ -35,13 +35,7 @@ export default function ChatReportModal({
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
 
-  useEffect(() => {
-    if (!isOpen) return
-    setLoading(true)
-    fetchReport()
-  }, [isOpen, sessionId])
-
-  const fetchReport = async () => {
+  const fetchReport = useCallback(async () => {
     try {
       const res = await fetch(`/api/chat/chats/${sessionId}/report`)
       if (!res.ok) {
@@ -56,7 +50,14 @@ export default function ChatReportModal({
     } finally {
       setLoading(false)
     }
-  }
+  }, [sessionId])
+
+  useEffect(() => {
+    if (!isOpen) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true)
+    fetchReport()
+  }, [isOpen, sessionId, fetchReport])
 
   const generateReport = async () => {
     setGenerating(true)
@@ -74,7 +75,7 @@ export default function ChatReportModal({
       setReport(data.data)
       toast(t('reportGenerated'), 'success')
       onReportGenerated?.()
-    } catch (error) {
+    } catch {
       toast(t('errors.analysisFailed'), 'error')
     } finally {
       setGenerating(false)

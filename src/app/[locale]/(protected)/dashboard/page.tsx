@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { Link } from '@/i18n/navigation'
+import { Link, useRouter } from '@/i18n/navigation'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
@@ -10,6 +10,7 @@ import StatCard from '@/components/dashboard/StatCard'
 import ScoreChart from '@/components/dashboard/ScoreChart'
 
 interface DashboardStats {
+  onboardingCompletedAt: string | null
   prenom: string | null
   messageCount: number
   avgScore: number
@@ -23,15 +24,22 @@ interface DashboardStats {
 
 export default function DashboardPage() {
   const t = useTranslations('dashboard')
+  const router = useRouter()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetch('/api/dashboard/stats')
       .then((r) => r.json())
-      .then((body) => setStats(body.data))
+      .then((body) => {
+        if (!body.data?.onboardingCompletedAt) {
+          router.replace('/onboarding')
+          return
+        }
+        setStats(body.data)
+      })
       .finally(() => setLoading(false))
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading || !stats) {
     return (
@@ -50,7 +58,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatCard
           label={t('stats.messages')}
           value={stats.messageCount}
@@ -68,7 +76,7 @@ export default function DashboardPage() {
           label={t('stats.cvScore')}
           value={stats.cvScore !== null ? `${stats.cvScore}/100` : t('stats.noCv')}
           color="gold"
-          icon="award"
+          icon="file"
         />
         <StatCard
           label={t('stats.sessions')}

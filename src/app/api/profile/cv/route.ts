@@ -18,37 +18,6 @@ const MAX_ANALYSES_PER_DAY = 2
 const ACCEPTED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'] as const
 type AcceptedType = typeof ACCEPTED_TYPES[number]
 
-async function extractTextWithOcr(buffer: Buffer): Promise<string> {
-  try {
-    const formData = new FormData()
-    formData.append('filename', 'cv.pdf')
-    formData.append('filetype', 'PDF')
-    formData.append('language', 'fre') // French language
-    const blob = new Blob([new Uint8Array(buffer)], { type: 'application/pdf' })
-    formData.append('file', blob)
-
-    console.log('[OCR] Sending request to OCR.space (free tier), blob size:', blob.size)
-    const res = await fetch('https://api.ocr.space/parse/image', {
-      method: 'POST',
-      body: formData,
-    })
-
-    console.log('[OCR] Response status:', res.status)
-    const result = await res.json()
-    console.log('[OCR] Response keys:', Object.keys(result))
-
-    if (!result.IsErroredOnProcessing && result.ParsedText) {
-      const text = result.ParsedText.replace(/\s+/g, ' ').trim()
-      console.log('[OCR] Success, text length:', text.length)
-      return text
-    }
-    console.log('[OCR] Failed:', result.ErrorMessage || result.ErrorDetails || `IsErrored: ${result.IsErroredOnProcessing}`)
-    return ''
-  } catch (error) {
-    console.error('[OCR] Exception:', error instanceof Error ? error.message : error)
-    return ''
-  }
-}
 
 export async function GET(_request: NextRequest) {
   const requestId = generateRequestId()

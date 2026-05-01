@@ -71,6 +71,7 @@ export default function LogsTable({ adminSecret }: LogsTableProps) {
     }
   }, [adminSecret, debouncedSearch, feature])
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchLogs(1) }, [fetchLogs])
 
   return (

@@ -105,6 +105,7 @@ describe('Rate Limiting', () => {
 
       const callArgs = mockPrismaCount.mock.calls[0]?.[0]
       if (!callArgs) throw new Error('No calls to mockPrismaCount')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const gteDate = (callArgs.where as any).createdAt.gte
 
       // The gte date should be approximately 1 hour before the call

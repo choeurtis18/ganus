@@ -31,7 +31,8 @@ model User {
   sousDomaine      String?
   niveau           String?   // 'junior' | 'confirme' | 'senior' | 'expert'
   postesRecherches Json?     // string[]
-  profileCompletedAt DateTime?
+  profileCompletedAt    DateTime?
+  onboardingCompletedAt DateTime?
 
   // CV Analysis (keep for latest analysis)
   cvUrl            String?   // Supabase Storage path

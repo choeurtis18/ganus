@@ -19,7 +19,6 @@ interface Stats {
     costToday: number; costMonth: number; costAllTime: number
   }
   topUsers: { email: string; totalCost: number; totalCalls: number }[]
-  dailyCosts: { date: string; cost: number }[]
 }
 
 type Section = 'stats' | 'users' | 'logs' | 'storage'
@@ -29,25 +28,6 @@ function formatCost(usd: number) {
   return `$${usd.toFixed(4)}`
 }
 
-function CostChart({ data }: { data: { date: string; cost: number }[] }) {
-  if (!data.length) return <p className="text-text-muted text-sm text-center py-6">Pas encore de données</p>
-  const max = Math.max(...data.map((d) => d.cost), 0.0001)
-  return (
-    <div className="flex items-end gap-0.5 h-24">
-      {data.map((d) => {
-        const pct = (d.cost / max) * 100
-        return (
-          <div key={d.date} className="flex-1 flex flex-col items-center group relative">
-            <div className="absolute bottom-full mb-1 hidden group-hover:flex bg-bg-card border border-border rounded px-2 py-1 text-xs text-text-primary whitespace-nowrap shadow-md z-10 pointer-events-none">
-              {d.date.slice(5)} — {formatCost(d.cost)}
-            </div>
-            <div className="w-full rounded-sm bg-emerald/60 hover:bg-emerald transition-colors" style={{ height: `${Math.max(pct, 2)}%` }} />
-          </div>
-        )
-      })}
-    </div>
-  )
-}
 
 export default function AdminPage() {
   const t = useTranslations('admin')
@@ -76,6 +56,7 @@ export default function AdminPage() {
   useEffect(() => {
     const stored = localStorage.getItem('ganus_dark')
     const dark = stored ? JSON.parse(stored) : false
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsDark(dark)
     document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
   }, [])
@@ -103,6 +84,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     const saved = sessionStorage.getItem('admin_secret')
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (saved && !stats) fetchStats(saved)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -226,12 +208,12 @@ export default function AdminPage() {
                 </div>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4 mb-6">
                   {[
-                    { label: t('stats.totalUsers'),   value: stats.overview.totalUsers,                color: 'emerald' },
-                    { label: t('stats.totalSessions'), value: stats.overview.totalSessions,             color: 'teal' },
-                    { label: t('stats.totalMessages'), value: stats.overview.totalLLMCalls,             color: 'gold' },
+                    { label: t('stats.totalUsers'),    value: stats.overview.totalUsers,               color: 'emerald' },
+                    { label: t('stats.totalSessions'), value: stats.overview.totalSessions,            color: 'teal' },
+                    { label: t('stats.totalMessages'), value: stats.overview.totalLLMCalls,            color: 'gold' },
                     { label: t('stats.costToday'),     value: formatCost(stats.overview.costToday),    color: 'orange' },
                     { label: t('stats.costMonth'),     value: formatCost(stats.overview.costMonth),    color: 'pink' },
-                    { label: t('stats.costAllTime'),   value: formatCost(stats.overview.costAllTime),  color: 'navy' },
+                    { label: t('stats.costAllTime'),   value: formatCost(stats.overview.costAllTime),  color: 'black' },
                   ].map((item, i) => (
                     <Card key={i} padding="p-4">
                       <p className="text-xs text-text-secondary uppercase font-semibold mb-2">{item.label}</p>
@@ -239,17 +221,7 @@ export default function AdminPage() {
                     </Card>
                   ))}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <Card padding="p-5">
-                    <h2 className="text-base font-semibold text-text-primary mb-3">Coûts — 30 derniers jours</h2>
-                    <CostChart data={stats.dailyCosts ?? []} />
-                    {(stats.dailyCosts ?? []).length > 0 && (
-                      <div className="flex justify-between mt-1">
-                        <p className="text-xs text-text-muted">{stats.dailyCosts[0].date.slice(5)}</p>
-                        <p className="text-xs text-text-muted">{stats.dailyCosts[stats.dailyCosts.length - 1].date.slice(5)}</p>
-                      </div>
-                    )}
-                  </Card>
+                <div className="grid grid-cols-1 gap-5">
                   <Card padding="p-5">
                     <h2 className="text-base font-semibold text-text-primary mb-3">{t('topUsers')}</h2>
                     {stats.topUsers.length === 0 ? (

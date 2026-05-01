@@ -22,8 +22,8 @@ export function LanguageSwitcher({ collapsed = false }: LanguageSwitcherProps) {
       className={`flex items-center gap-2 w-full rounded-md border-none bg-transparent cursor-pointer font-semibold font-sans text-text-muted hover:text-text-primary transition-colors text-sm ${collapsed ? 'justify-center px-0 py-2.5' : 'justify-start px-3.5 py-2.5'}`}
       title={locale === 'fr' ? t('switchToEnglish') : t('switchToFrench')}
     >
-      <Icon name="language" size={16} color="currentColor" />
-      {!collapsed && (locale === 'fr' ? 'EN' : 'FR')}
+      {!collapsed && (<Icon name="language" size={16} color="currentColor" />)}
+      {locale === 'fr' ? 'EN' : 'FR'}
     </button>
   )
 }

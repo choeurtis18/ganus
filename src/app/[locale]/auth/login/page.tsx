@@ -33,6 +33,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     const msg = searchParams.get('message')
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (msg) setMessage(decodeURIComponent(msg))
 
     const stored = localStorage.getItem('ganus_dark')
@@ -57,7 +58,7 @@ export default function LoginPage() {
         setError(result.error)
         return
       }
-      router.push('/chat')
+      router.push('/dashboard')
     } catch (err) {
       setError(t('errors.unknown'))
       console.error(err)

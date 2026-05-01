@@ -32,6 +32,7 @@ export default function SignupPage() {
   useEffect(() => {
     const stored = localStorage.getItem('ganus_dark')
     const darkMode = stored ? JSON.parse(stored) : false
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsDark(darkMode)
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
   }, [])

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { prisma } from '@/lib/db'
 import { errorResponse, successResponse, generateRequestId } from '@/lib/api-response'
@@ -40,7 +40,7 @@ export async function GET(
       return errorResponse(getErrorMessage(ERROR_CODES.CHAT_NOT_FOUND), requestId, 404)
     }
 
-    const messages = (chat.messages as unknown as any[]) || []
+    const messages = (chat.messages as unknown[]) || []
 
     return successResponse({
       id: chat.id,

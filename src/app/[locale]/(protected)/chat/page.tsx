@@ -57,6 +57,7 @@ function ChatPageContent() {
 
   useEffect(() => {
     if (!isMobile) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowChat(true)
       return
     }
@@ -90,6 +91,7 @@ function ChatPageContent() {
     }
   }, [t])
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { loadSession(chatId) }, [chatId, loadSession])
 
   useEffect(() => {
@@ -124,7 +126,7 @@ function ChatPageContent() {
     }
     setMessages((prev) => [...prev, userMessage])
     setInput('')
-    textareaRef.current?.style && (textareaRef.current.style.height = 'auto')
+    if (textareaRef.current?.style) textareaRef.current.style.height = 'auto'
 
     try {
       const response = await fetch('/api/chat', {

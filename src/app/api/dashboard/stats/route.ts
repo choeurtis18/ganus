@@ -15,7 +15,7 @@ export async function GET(_request: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { supabaseId: authUser.id },
-      select: { id: true, prenom: true, cvAnalysis: true, cvAnalysisAt: true },
+      select: { id: true, prenom: true, cvAnalysis: true, cvAnalysisAt: true, onboardingCompletedAt: true },
     })
     if (!user) return errorResponse(getErrorMessage(ERROR_CODES.USER_NOT_FOUND), requestId, 404)
 
@@ -136,6 +136,7 @@ export async function GET(_request: NextRequest) {
     const personalizedTips = cvData?.suggestions ?? []
 
     return successResponse({
+      onboardingCompletedAt: user.onboardingCompletedAt,
       prenom: user.prenom,
       messageCount: totalMessages._sum.totalTurns ?? 0,
       avgScore: Math.round(avgScore),

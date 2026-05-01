@@ -21,7 +21,7 @@ export async function proxy(request: NextRequest) {
   const intlResponse = intlMiddleware(request)
   if (!isProtected && !isAuth) return intlResponse
 
-  let response =
+  const response =
     intlResponse ??
     NextResponse.next({
       request: {

@@ -382,6 +382,65 @@
       "noData": "No data"
     }
   },
+  "onboarding": {
+    "skip": "Skip onboarding",
+    "next": "Next step",
+    "back": "Back",
+    "saving": "Saving...",
+    "starting": "Loading...",
+    "errors": {
+      "invalidAge": "Age must be between 18 and 99",
+      "saveFailed": "Failed to save profile"
+    },
+    "step1": {
+      "title": "Complete your profile",
+      "subtitle": "This information will help the AI personalize your interview simulations.",
+      "personalInfo": "Personal information",
+      "prenom": "First name",
+      "nom": "Last name",
+      "age": "Age",
+      "professionalInfo": "Professional profile",
+      "domaine": "Domain",
+      "sousDomaine": "Specialty",
+      "niveau": "Experience level",
+      "postes": "Target positions",
+      "selectDomaine": "Choose a domain",
+      "selectSousDomaine": "Choose a specialty",
+      "selectNiveau": "Choose your level"
+    },
+    "step2": {
+      "title": "Analyze your CV",
+      "subtitle": "The AI will analyze your CV to generate personalized advice and tailor interview questions.",
+      "analyzed": "CV analyzed successfully!",
+      "skip": "Skip this step"
+    },
+    "step3": {
+      "title": "Discover the features",
+      "subtitle": "Here's how to get the most out of Ganus.",
+      "tip": "Tip: start with an interview simulation to see your first scores, then check your dashboard to track your progress.",
+      "cta": "Let's go!"
+    },
+    "features": {
+      "chat": {
+        "title": "AI Interview Simulation",
+        "desc": "Start a simulated interview session with our AI. Answer questions and receive a score and feedback after each response."
+      },
+      "cv": {
+        "title": "CV Analysis",
+        "desc": "Upload your CV to get an overall score, strengths, areas for improvement, and advice tailored to the positions you're targeting."
+      },
+      "dashboard": {
+        "title": "Progress Tracking",
+        "desc": "Check your dashboard to visualize the evolution of your scores over time and identify skills to strengthen."
+      }
+    },
+    "skipModal": {
+      "title": "Skip onboarding?",
+      "message": "By skipping onboarding, you may not benefit from personalized recommendations and an optimal experience. It only takes 5 minutes. Are you sure you want to skip?",
+      "cancel": "Continue onboarding",
+      "confirm": "Skip anyway"
+    }
+  },
   "notFound": {
     "title": "Page not found",
     "description": "The page you're looking for doesn't exist or has been moved.",

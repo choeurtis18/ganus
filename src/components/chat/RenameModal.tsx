@@ -11,7 +11,7 @@ interface RenameModalProps {
   onSave: (newTitle: string) => Promise<void>
 }
 
-export function RenameModal({ chatId, currentTitle, isOpen, onClose, onSave }: RenameModalProps) {
+export function RenameModal({ currentTitle, isOpen, onClose, onSave }: RenameModalProps) {
   const t = useTranslations('sidebar')
   const tCommon = useTranslations('common')
   const [title, setTitle] = useState(currentTitle)
@@ -19,6 +19,7 @@ export function RenameModal({ chatId, currentTitle, isOpen, onClose, onSave }: R
   const [error, setError] = useState('')
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTitle(currentTitle)
     setError('')
   }, [currentTitle, isOpen])

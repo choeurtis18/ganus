@@ -12,7 +12,7 @@ interface AdminUser {
 interface UserDetail {
   user: {
     id: string; email: string; role: string; createdAt: string
-    suspended: boolean; postesRecherches: string[] | null
+    postesRecherches: string[] | null
     cvAnalysisCount: number; cvAnalysisAt: string | null
     chatReportCount: number
   }
@@ -56,6 +56,7 @@ export default function UserTable({ adminSecret }: UserTableProps) {
     } finally { setLoading(false) }
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchUsers(1) }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const openDetail = async (id: string) => {
@@ -84,12 +85,6 @@ export default function UserTable({ adminSecret }: UserTableProps) {
     setConfirmDelete(null)
     if (selectedId === id) { setSelectedId(null); setSelectedUser(null) }
     fetchUsers(page)
-  }
-
-  const toggleSuspend = async () => {
-    if (!selectedId) return
-    await patch(selectedId, { suspended: !selectedUser?.user.suspended })
-    setSelectedId(null); void openDetail(selectedId)
   }
 
   const resetRateLimit = async () => {
@@ -186,31 +181,22 @@ export default function UserTable({ adminSecret }: UserTableProps) {
                   ) : (
                     <>
                       {/* Stats cards */}
-                      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                         {[
                           { label: 'Sessions',       value: String(selectedUser.stats.sessionCount), color: '' },
                           { label: 'Coût total',     value: formatCost(selectedUser.stats.totalCost), color: 'text-gold font-mono' },
                           { label: 'Analyses CV',    value: `${selectedUser.user.cvAnalysisCount}/2 jour`, color: '' },
                           { label: 'Rapports chat',  value: `${selectedUser.user.chatReportCount}/4 jour`, color: '' },
-                          { label: 'Statut',         value: null, badge: selectedUser.user.suspended },
                         ].map((item, i) => (
                           <div key={i} className="bg-bg-card rounded-lg p-3">
                             <p className="text-text-muted text-xs mb-1">{item.label}</p>
-                            {item.value !== null
-                              ? <p className={`font-bold text-text-primary ${item.color}`}>{item.value}</p>
-                              : <Badge color={selectedUser.user.suspended ? 'orange' : 'emerald'} size="sm">
-                                  {selectedUser.user.suspended ? 'Suspendu' : 'Actif'}
-                                </Badge>
-                            }
+                            <p className={`font-bold text-text-primary ${item.color}`}>{item.value}</p>
                           </div>
                         ))}
                       </div>
 
                       {/* Admin actions */}
                       <div className="flex flex-wrap gap-2">
-                        <Button size="sm" variant={selectedUser.user.suspended ? 'ghost' : 'danger'} onClick={toggleSuspend}>
-                          {selectedUser.user.suspended ? '✓ Réactiver' : '⊘ Suspendre'}
-                        </Button>
                         <Button size="sm" variant="outline" onClick={resetRateLimit}>↺ Reset analyse CV</Button>
                         <Button size="sm" variant="outline" onClick={resetChatReportRateLimit}>↺ Reset rapports chat</Button>
                       </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Icon } from '@/components/ui/icon'
 import { ChatListItem } from './ChatListItem'
@@ -37,9 +37,7 @@ export function ChatSidebar({ currentChatId, onSelectChat, onNewChat, refreshTri
     chat.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  useEffect(() => { loadChats() }, [refreshTrigger])
-
-  const loadChats = async () => {
+  const loadChats = useCallback(async () => {
     try {
       setLoading(true)
       setError('')
@@ -52,7 +50,10 @@ export function ChatSidebar({ currentChatId, onSelectChat, onNewChat, refreshTri
     } finally {
       setLoading(false)
     }
-  }
+  }, [t])
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { loadChats() }, [refreshTrigger, loadChats])
 
   const handleRename = async (newTitle: string) => {
     if (!selectedChat) return

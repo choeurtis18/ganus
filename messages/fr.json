@@ -382,6 +382,65 @@
       "noData": "Aucune donnée"
     }
   },
+  "onboarding": {
+    "skip": "Passer l'onboarding",
+    "next": "Étape suivante",
+    "back": "Retour",
+    "saving": "Sauvegarde...",
+    "starting": "Chargement...",
+    "errors": {
+      "invalidAge": "L'âge doit être compris entre 18 et 99 ans",
+      "saveFailed": "Impossible de sauvegarder le profil"
+    },
+    "step1": {
+      "title": "Complétez votre profil",
+      "subtitle": "Ces informations permettront à l'IA de personnaliser vos simulations d'entretien.",
+      "personalInfo": "Informations personnelles",
+      "prenom": "Prénom",
+      "nom": "Nom",
+      "age": "Âge",
+      "professionalInfo": "Profil professionnel",
+      "domaine": "Domaine",
+      "sousDomaine": "Spécialité",
+      "niveau": "Niveau d'expérience",
+      "postes": "Postes recherchés",
+      "selectDomaine": "Choisir un domaine",
+      "selectSousDomaine": "Choisir une spécialité",
+      "selectNiveau": "Choisir votre niveau"
+    },
+    "step2": {
+      "title": "Analysez votre CV",
+      "subtitle": "L'IA analysera votre CV pour générer des conseils personnalisés et adapter les questions d'entretien.",
+      "analyzed": "CV analysé avec succès !",
+      "skip": "Passer cette étape"
+    },
+    "step3": {
+      "title": "Découvrez les fonctionnalités",
+      "subtitle": "Voici comment tirer le meilleur parti de Ganus.",
+      "tip": "Conseil : commencez par une simulation d'entretien pour voir vos premiers scores, puis consultez votre dashboard pour suivre votre progression.",
+      "cta": "Commencer"
+    },
+    "features": {
+      "chat": {
+        "title": "Simulation d'entretien IA",
+        "desc": "Lancez une session d'entretien simulée avec notre IA. Répondez aux questions et recevez un score et des conseils après chaque réponse."
+      },
+      "cv": {
+        "title": "Analyse de CV",
+        "desc": "Uploadez votre CV pour obtenir un score global, des points forts, des axes d'amélioration et des conseils adaptés aux postes que vous visez."
+      },
+      "dashboard": {
+        "title": "Suivi de progression",
+        "desc": "Consultez votre dashboard pour visualiser l'évolution de vos scores au fil du temps et identifier les compétences à renforcer."
+      }
+    },
+    "skipModal": {
+      "title": "Passer l'onboarding ?",
+      "message": "En passant l'onboarding, vous risquez de ne pas bénéficier de recommandations personnalisées et d'une expérience optimale. Ça dure uniquement 5 minutes. Êtes-vous sûr de vouloir continuer ?",
+      "cancel": "Continuer l'onboarding",
+      "confirm": "Passer quand même"
+    }
+  },
   "notFound": {
     "title": "Page introuvable",
     "description": "La page que tu cherches n'existe pas ou a été déplacée.",

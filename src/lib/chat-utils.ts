@@ -6,7 +6,7 @@ export function generateTitleFromMessage(message: string): string {
   }
 
   const words = trimmed.split(/\s+/).slice(0, 6)
-  let title = words.join(' ')
+  const title = words.join(' ')
 
   return title.length > 100 ? title.slice(0, 100) + '...' : title
 }

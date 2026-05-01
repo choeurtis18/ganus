@@ -21,7 +21,7 @@ export async function GET(
       where: { id, deletedAt: null },
       select: {
         id: true, email: true, role: true, createdAt: true,
-        suspendedAt: true, postesRecherches: true,
+        postesRecherches: true,
         cvAnalysisCount: true, cvAnalysisAt: true,
         chatReportCount: true,
       },
@@ -47,7 +47,7 @@ export async function GET(
     const totalCost = costByFeature.reduce((acc, r) => acc + (r._sum.costUSD ?? 0), 0)
 
     return successResponse({
-      user: { ...user, suspended: !!user.suspendedAt },
+      user,
       stats: {
         sessionCount, totalCost,
         costByFeature: costByFeature.map((r) => ({ feature: r.feature, cost: r._sum.costUSD ?? 0, calls: r._count.id })),
@@ -78,9 +78,6 @@ export async function PATCH(
     if ('role' in body) {
       if (!['user', 'admin'].includes(body.role as string)) return errorResponse('Rôle invalide', requestId, 400)
       data.role = body.role
-    }
-    if ('suspended' in body) {
-      data.suspendedAt = body.suspended ? new Date() : null
     }
     if ('postesRecherches' in body) {
       if (!Array.isArray(body.postesRecherches) || (body.postesRecherches as unknown[]).length > 5)

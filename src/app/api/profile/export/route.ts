@@ -4,7 +4,7 @@ import { prisma } from '@/lib/db'
 import { errorResponse, generateRequestId } from '@/lib/api-response'
 import { ERROR_CODES, getErrorMessage } from '@/lib/error-messages'
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const requestId = generateRequestId()
 
   try {
