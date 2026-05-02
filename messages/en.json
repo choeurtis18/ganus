@@ -41,7 +41,7 @@
       "submitting": "Submitting...",
       "success": "Password reset successfully!",
       "redirecting": "Redirecting to login...",
-      "backToHome": "Back to home",
+      "backToLogin": "Back to login",
       "errors": {
         "required": "All fields are required",
         "passwordMismatch": "Passwords do not match",

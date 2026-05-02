@@ -41,7 +41,7 @@
       "submitting": "Envoi...",
       "success": "Mot de passe réinitialisé avec succès!",
       "redirecting": "Redirection vers la connexion...",
-      "backToHome": "Retour à l'accueil",
+      "backToLogin": "Retour à la connexion",
       "errors": {
         "required": "Tous les champs sont requis",
         "passwordMismatch": "Les mots de passe ne correspondent pas",
