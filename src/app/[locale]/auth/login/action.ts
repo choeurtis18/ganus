@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase-server'
 import { syncUserToDB } from '@/lib/supabase-server'
 
 export type LoginErrorCode = 'invalid_credentials' | 'signin_failed' | 'unknown'
+export type ResetErrorCode = 'unknown'
 
 export async function signInAction(
   email: string,
@@ -39,5 +40,26 @@ export async function signInAction(
   } catch (err) {
     console.error('Login error:', err)
     return { error: 'unknown' }
+  }
+}
+
+export async function resetPasswordAction(email: string): Promise<{ error?: string }> {
+  try {
+    const supabase = await createClient()
+
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://ganus.vercel.app'
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${appUrl}/auth/reset-confirm`,
+    })
+
+    if (error) {
+      console.error('Reset password error:', error.message)
+      return { error: error.message }
+    }
+
+    return {}
+  } catch (err) {
+    console.error('Reset password error:', err)
+    return { error: 'Une erreur est survenue' }
   }
 }

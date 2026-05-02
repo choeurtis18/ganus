@@ -6,11 +6,10 @@ import { useSearchParams } from 'next/navigation'
 import { useRouter, usePathname } from '@/i18n/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
-import { signInAction } from './action'
+import { signInAction, resetPasswordAction } from './action'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
-import { supabase } from '@/lib/supabase-client'
 
 const featureIcons = [
   { icon: 'chat', key: 'interviews' },
@@ -107,12 +106,9 @@ export default function LoginPage() {
 
     setResetLoading(true)
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL || 'https://ganus.vercel.app'}/auth/reset-confirm`,
-      })
-
-      if (error) {
-        setResetError(error.message)
+      const result = await resetPasswordAction(resetEmail)
+      if (result.error) {
+        setResetError(result.error)
       } else {
         setResetMessage(t('resetSent') || 'Email de réinitialisation envoyé')
         setResetEmail('')
