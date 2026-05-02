@@ -6,6 +6,11 @@
       "heroTitle": "Votre génie vous attend.",
       "heroSubtitle": "Chaque entretien est une porte. Nous vous aidons à la franchir avec confiance.",
       "forgotPassword": "Mot de passe oublié ?",
+      "resetTitle": "Réinitialiser le mot de passe",
+      "resetSent": "Lien de réinitialisation envoyé par email",
+      "resetSend": "Envoyer le lien",
+      "sending": "Envoi...",
+      "cancel": "Annuler",
       "features": {
         "interviews": "Simulations d'entretien via IA",
         "cv": "Analyse de CV intelligente",
@@ -22,6 +27,25 @@
       "errors": {
         "required": "Email et mot de passe requis",
         "invalidCredentials": "Email ou mot de passe incorrect",
+        "unknown": "Une erreur est survenue"
+      }
+    },
+    "reset": {
+      "title": "Nouveau mot de passe",
+      "subtitle": "Définissez un nouveau mot de passe pour votre compte",
+      "passwordLabel": "Nouveau mot de passe",
+      "passwordConfirmLabel": "Confirmer le mot de passe",
+      "passwordPlaceholder": "••••••••",
+      "passwordHint": "Au minimum 8 caractères",
+      "submit": "Réinitialiser",
+      "submitting": "Envoi...",
+      "success": "Mot de passe réinitialisé avec succès!",
+      "redirecting": "Redirection vers la connexion...",
+      "backToLogin": "Retour à la connexion",
+      "errors": {
+        "required": "Tous les champs sont requis",
+        "passwordMismatch": "Les mots de passe ne correspondent pas",
+        "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
         "unknown": "Une erreur est survenue"
       }
     },

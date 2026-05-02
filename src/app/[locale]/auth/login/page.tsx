@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FormEvent } from 'react'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { useRouter, usePathname } from '@/i18n/navigation'
@@ -10,6 +10,7 @@ import { signInAction } from './action'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/ui/icon'
+import { supabase } from '@/lib/supabase-client'
 
 const featureIcons = [
   { icon: 'chat', key: 'interviews' },
@@ -30,6 +31,11 @@ export default function LoginPage() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [isDark, setIsDark] = useState(false)
+  const [resetEmail, setResetEmail] = useState('')
+  const [showReset, setShowReset] = useState(false)
+  const [resetLoading, setResetLoading] = useState(false)
+  const [resetMessage, setResetMessage] = useState('')
+  const [resetError, setResetError] = useState('')
 
   useEffect(() => {
     const msg = searchParams.get('message')
@@ -87,6 +93,36 @@ export default function LoginPage() {
   const toggleLanguage = () => {
     const newLocale = locale === 'fr' ? 'en' : 'fr'
     router.replace(pathname, { locale: newLocale })
+  }
+
+  const handleResetPassword = async (e: FormEvent) => {
+    e.preventDefault()
+    setResetError('')
+    setResetMessage('')
+
+    if (!resetEmail) {
+      setResetError(t('errors.required'))
+      return
+    }
+
+    setResetLoading(true)
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL || 'https://ganus.vercel.app'}/auth/reset-confirm`,
+      })
+
+      if (error) {
+        setResetError(error.message)
+      } else {
+        setResetMessage(t('resetSent') || 'Email de réinitialisation envoyé')
+        setResetEmail('')
+      }
+    } catch (err) {
+      setResetError(t('errors.unknown'))
+      console.error(err)
+    } finally {
+      setResetLoading(false)
+    }
   }
 
   return (
@@ -196,6 +232,7 @@ export default function LoginPage() {
               <div className="text-right mt-1.5">
                 <button
                   type="button"
+                  onClick={() => setShowReset(true)}
                   className="text-sm font-medium hover:opacity-70 transition-opacity"
                   style={{ color: 'var(--gold)' }}
                 >
@@ -220,6 +257,70 @@ export default function LoginPage() {
           </p>
         </div>
       </div>
+
+      {/* Reset Password Modal */}
+      {showReset && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-bg-card rounded-lg shadow-lg max-w-sm w-full p-6 border border-border">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-display font-bold text-text-primary">
+                {t('resetTitle') || 'Réinitialiser le mot de passe'}
+              </h3>
+              <button
+                onClick={() => {
+                  setShowReset(false)
+                  setResetError('')
+                  setResetMessage('')
+                  setResetEmail('')
+                }}
+                className="text-text-secondary hover:text-text-primary transition-colors"
+              >
+                <Icon name="x" size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleResetPassword} className="space-y-4">
+              {resetMessage && (
+                <div className="p-3 bg-emerald/10 text-emerald rounded-lg text-sm font-medium">
+                  {resetMessage}
+                </div>
+              )}
+              {resetError && (
+                <div className="p-3 bg-red-600/10 text-red-600 rounded-lg text-sm font-medium">
+                  {resetError}
+                </div>
+              )}
+
+              <Input
+                label={t('emailLabel')}
+                type="email"
+                placeholder={t('emailPlaceholder')}
+                value={resetEmail}
+                onChange={setResetEmail}
+              />
+
+              <div className="flex gap-3">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => {
+                    setShowReset(false)
+                    setResetError('')
+                    setResetMessage('')
+                    setResetEmail('')
+                  }}
+                  fullWidth
+                >
+                  {t('cancel') || 'Annuler'}
+                </Button>
+                <Button type="submit" disabled={resetLoading} fullWidth>
+                  {resetLoading ? t('sending') || 'Envoi...' : t('resetSend') || 'Envoyer'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

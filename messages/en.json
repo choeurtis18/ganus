@@ -6,6 +6,11 @@
       "heroTitle": "Your genius awaits.",
       "heroSubtitle": "Every interview is a door. We help you walk through it with confidence.",
       "forgotPassword": "Forgot password?",
+      "resetTitle": "Reset Password",
+      "resetSent": "Password reset link sent to your email",
+      "resetSend": "Send Link",
+      "sending": "Sending...",
+      "cancel": "Cancel",
       "features": {
         "interviews": "AI-powered interview simulations",
         "cv": "Intelligent CV analysis",
@@ -22,6 +27,25 @@
       "errors": {
         "required": "Email and password are required",
         "invalidCredentials": "Invalid email or password",
+        "unknown": "An error occurred"
+      }
+    },
+    "reset": {
+      "title": "New Password",
+      "subtitle": "Set a new password for your account",
+      "passwordLabel": "New Password",
+      "passwordConfirmLabel": "Confirm Password",
+      "passwordPlaceholder": "••••••••",
+      "passwordHint": "At least 8 characters",
+      "submit": "Reset Password",
+      "submitting": "Submitting...",
+      "success": "Password reset successfully!",
+      "redirecting": "Redirecting to login...",
+      "backToLogin": "Back to login",
+      "errors": {
+        "required": "All fields are required",
+        "passwordMismatch": "Passwords do not match",
+        "passwordTooShort": "Password must be at least 8 characters",
         "unknown": "An error occurred"
       }
     },
