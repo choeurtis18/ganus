@@ -58,7 +58,13 @@ export default function ResetConfirmPage() {
     try {
       const { error: updateError } = await supabase.auth.updateUser({ password })
       if (updateError) {
-        setError(updateError.message || t('errors.unknown'))
+        // Map Supabase errors to translations
+        const errorMap: Record<string, string> = {
+          'invalid_password': t('errors.passwordTooShort'),
+          'same_password': 'Le nouveau mot de passe doit être différent de l\'ancien',
+        }
+        const translatedError = errorMap[updateError.message] || t('errors.unknown')
+        setError(translatedError)
         return
       }
 
